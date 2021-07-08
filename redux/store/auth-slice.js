@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiSignIn } from "../../services/api/api";
 import jwt from "jsonwebtoken";
-import { token } from "morgan";
+
 
 const initialState = {
   user: {
@@ -65,3 +65,4 @@ export const authSlice = createSlice({
 export const { login, logout } = authSlice.actions;
 export const selectUser=state=>state.auth.user;
 export const selectIsAuthnticated=state=>state.auth.isAuthnticated;
+export const selectAuthStatus=state=>state.auth.status;
