@@ -1,24 +1,25 @@
 const mongoose = require("mongoose");
-
+const mongoosePaginate = require("mongoose-paginate-v2");
 const Schema = mongoose.Schema;
+
 const shipmentShema = new Schema(
   {
     bags: {
       type: Number,
       required: true,
     },
-    extraBags:{
-      type:Number,
-      default:0
+    extraBags: {
+      type: Number,
+      default: 0
     },
-    extraGauge:{
-      type:Number,
-      default:1
+    extraGauge: {
+      type: Number,
+      default: 1
     },
 
-    isPriced:{
-      type:Boolean,
-      default:true
+    isPriced: {
+      type: Boolean,
+      default: true
     },
     gauge: {
       type: Number,
@@ -36,9 +37,9 @@ const shipmentShema = new Schema(
       type: Number,
       required: true,
     },
-    date:{
-      type:Date,
-      default:Date.now
+    date: {
+      type: Date,
+      default: Date.now
     },
     client: {
       type: Schema.Types.ObjectId,
@@ -55,4 +56,6 @@ const shipmentShema = new Schema(
   },
   { timestamps: true }
 );
+
+shipmentShema.plugin(mongoosePaginate);
 module.exports = mongoose.model("Shipment", shipmentShema);

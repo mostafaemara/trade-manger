@@ -16,8 +16,10 @@ function PrivatePage(props) {
             <h1>Redirecting...</h1>
         </div>;
 
+    } else {
+        content = props.children;
     }
-    content = props.children;
+
 
 
     return <Fragment>{content}</Fragment>;

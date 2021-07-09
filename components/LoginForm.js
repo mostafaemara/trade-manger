@@ -58,7 +58,7 @@ function LoginForm(props) {
                                 <ErrorMessage className="form-text" name="password" component="div"></ErrorMessage>
                             </div>
                             <button className="btn btn-primary m-3" type="submit" disabled={isSubmiting}>Submit</button >
-                            <button type="button" class="btn btn-link">Dont have Acount? Signup</button>
+                            <button type="button" className="btn btn-link">Dont have Acount? Signup</button>
                         </Form>)
 
 

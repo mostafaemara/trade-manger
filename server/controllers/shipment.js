@@ -2,19 +2,44 @@ const { body, validationResult, query } = require("express-validator");
 const Shipment = require("../models/shipment");
 const QueryHelper = require("../utils/query-helper");
 const { createPaytment } = require("./payment");
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
 
+  return { limit, offset };
+};
 exports.getShipments = async (req, res, next) => {
-  const query = QueryHelper.formatQuery(req.query);
-
+  // const query = QueryHelper.formatQuery(req.query);
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
   try {
-    const shipments = await Shipment.find(query).populate("client", "name").populate("creator","name");
-    if (!shipments) {
+    const data = await Shipment.paginate({}, {
+      populate: [
+        {
+          path: "client",
+          select: "name"
+        },
+        {
+          path: "creator",
+          select: "name"
+        }
+      ], offset, limit
+    });
+
+    //.populate("client", "name").populate("creator", "name");
+    if (!data) {
       const error = new Error("no Clients!");
       error.statusCode = 404;
 
       throw error;
     }
-    res.status(200).json(shipments);
+    res.status(200).json({
+      totalItems: data.totalDocs,
+      shipments: data.docs,
+      totalPages: data.totalPages,
+      currentPage: data.page - 1
+
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -23,17 +48,17 @@ exports.getShipments = async (req, res, next) => {
   }
 };
 
-exports.createShipment =  async(req, res, next) => {
+exports.createShipment = async (req, res, next) => {
   const bags = req.body.bags;
   const gauge = req.body.gauge;
   const weight = req.body.weight;
   const pricePerKantar = req.body.pricePerKantar;
   const expenses = req.body.expenses;
   const client = req.body.client;
-  const extraBags=req.body.extraBags;
-  const date=req.body.date;
-  const extraGauge=req.body.extraGauge;
-  const isPriced=req.body.isPriced;
+  const extraBags = req.body.extraBags;
+  const date = req.body.date;
+  const extraGauge = req.body.extraGauge;
+  const isPriced = req.body.isPriced;
   console.log(req.body.gauge);
   const shipment = Shipment({
     bags: bags,
@@ -43,30 +68,30 @@ exports.createShipment =  async(req, res, next) => {
     expenses: expenses,
     client: client,
     creator: req.userId,
-    isPriced:isPriced,
-    extraGauge:extraGauge,
-    date:date,
-    extraBags:extraBags
+    isPriced: isPriced,
+    extraGauge: extraGauge,
+    date: date,
+    extraBags: extraBags
   });
-  try{
-    const createdShipment=  await  shipment.save() 
-  
-    const populatedShipment= await Shipment.populate(createdShipment,{path:"client creator",select:"name"});
-    
-      res.status(201).json({
-        message: "Shipment created successfully",
-        shipment: populatedShipment,
-      });
-   
+  try {
+    const createdShipment = await shipment.save()
 
-  }catch{
+    const populatedShipment = await Shipment.populate(createdShipment, { path: "client creator", select: "name" });
+
+    res.status(201).json({
+      message: "Shipment created successfully",
+      shipment: populatedShipment,
+    });
+
+
+  } catch {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
 
-  
+
 };
 exports.test = (req, res, next) => {
   const queryObj = { ...req.query };
@@ -88,81 +113,81 @@ exports.test = (req, res, next) => {
     });
 };
 
-exports.editeShipment =  async(req, res, next) => {
-  const id=req.body.id;
+exports.editeShipment = async (req, res, next) => {
+  const id = req.body.id;
   const bags = req.body.bags;
   const gauge = req.body.gauge;
   const weight = req.body.weight;
   const pricePerKantar = req.body.pricePerKantar;
   const expenses = req.body.expenses;
   const client = req.body.client;
-  const extraBags=req.body.extraBags;
-  const date=req.body.date;
-  const extraGauge=req.body.extraGauge;
-  const isPriced=req.body.isPriced;
+  const extraBags = req.body.extraBags;
+  const date = req.body.date;
+  const extraGauge = req.body.extraGauge;
+  const isPriced = req.body.isPriced;
 
-  try{
-    const shipment=  await  Shipment.findOneAndUpdate({"_id":id},{
+  try {
+    const shipment = await Shipment.findOneAndUpdate({ "_id": id }, {
       bags: bags,
-    gauge: gauge,
-    weight: weight,
-    pricePerKantar: pricePerKantar,
-    expenses: expenses,
-    client: client,
-    creator: req.userId,
-    isPriced:isPriced,
-    extraGauge:extraGauge,
-    date:date,
-    extraBags:extraBags
+      gauge: gauge,
+      weight: weight,
+      pricePerKantar: pricePerKantar,
+      expenses: expenses,
+      client: client,
+      creator: req.userId,
+      isPriced: isPriced,
+      extraGauge: extraGauge,
+      date: date,
+      extraBags: extraBags
 
-    },{new: true});
+    }, { new: true });
     if (!shipment) {
       const error = new Error("no Clients!");
       error.statusCode = 404;
 
       throw error;
     }
-  
-    const populatedShipment= await Shipment.populate(shipment,{path:"client creator",select:"name"});
-    
-      res.status(201).json({
-        message: "Shipment edited successfully",
-        shipment: populatedShipment,
-      });
-   
 
-  }catch{
+    const populatedShipment = await Shipment.populate(shipment, { path: "client creator", select: "name" });
+
+    res.status(201).json({
+      message: "Shipment edited successfully",
+      shipment: populatedShipment,
+    });
+
+
+  } catch {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
 
-  
+
 };
-exports.deleteShipment =  async(req, res, next) => {
-  const id=req.body.id;
+exports.deleteShipment = async (req, res, next) => {
+  const id = req.body.id;
 
 
-  try{
+  try {
     console.log(id);
-    const shipment=  await  Shipment.findByIdAndRemove(id);
-    
-  
-  
-    
-      res.status(201).json({
-        message: "Shipment deleted successfully",
-      
-      });
-   
+    const shipment = await Shipment.findByIdAndRemove(id);
 
-  }catch{
+
+
+
+    res.status(201).json({
+      message: "Shipment deleted successfully",
+
+    });
+
+
+  } catch {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
 
-  
+
 };
