@@ -1,12 +1,15 @@
 import React from 'react'
-
+import PrivatePage from '../../components/wrapper/protect-route'
 function PaymentsPage() {
     return (
-        <div><h1>
-            Payments Page
-        </h1>
+        <PrivatePage>  <div>
+            <title>Payments</title>
+            <h1>
+                Payments Page
+            </h1>
 
-        </div>
+        </div></PrivatePage>
+
     )
 }
 

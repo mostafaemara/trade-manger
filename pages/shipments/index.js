@@ -1,10 +1,13 @@
 import React from 'react'
-
+import PrivatePage from '../../components/wrapper/protect-route'
 function ShipmentsPage() {
     return (
-        <div><h1>Shipments page</h1>
+        <PrivatePage>  <div>
+            <title>Shipments</title>
+            <h1>Shipments Page</h1>
 
-        </div>
+        </div></PrivatePage>
+
     )
 }
 

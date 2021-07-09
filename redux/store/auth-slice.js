@@ -36,26 +36,26 @@ export const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     logout(state, action) {
-      state.user ={
+      state.user = {
         email: "",
         userId: "",
         name: "",
       },
-      state.token = "";
+        state.token = "";
       state.isAuthnticated = false;
     },
   },
   extraReducers: {
     [loginThunk.pending]: (state, action) => {
-      state.status = "Loading";
+      state.status = "loading";
     },
     [loginThunk.fulfilled]: (state, action) => {
-      state.status = "Succeeded";
+      state.status = "succeeded";
       state.isAuthnticated = true;
       state.user.name = action.payload.name,
         state.user.email = action.payload.email,
         state.user.userId = action.payload.userId,
-      state.token = action.payload.token;
+        state.token = action.payload.token;
     },
     [loginThunk.rejected]: (state, action) => {
       state.status = "failed";
@@ -63,6 +63,6 @@ export const authSlice = createSlice({
   },
 });
 export const { login, logout } = authSlice.actions;
-export const selectUser=state=>state.auth.user;
-export const selectIsAuthnticated=state=>state.auth.isAuthnticated;
-export const selectAuthStatus=state=>state.auth.status;
+export const selectUser = state => state.auth.user;
+export const selectIsAuthnticated = state => state.auth.isAuthnticated;
+export const selectAuthStatus = state => state.auth.status;

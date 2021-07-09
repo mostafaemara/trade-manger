@@ -1,18 +1,16 @@
-import { useSelector, useDispatch } from "react-redux";
-import { login, logout } from "../redux/store/index";
-import { loginThunk } from "../redux/store/auth-slice";
-
+import PrivatePage from "../components/wrapper/protect-route";
 function HomePage() {
 
 
-
   return (
-    <div>
-      <h1>Home</h1>
+    <PrivatePage>  <div> <title>Home</title>
+      <h1>Home Page</h1>
 
 
-    </div>
+    </div></PrivatePage>
+
   );
 }
+
 
 export default HomePage;
