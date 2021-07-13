@@ -1,4 +1,4 @@
-import LoginForm from "../../components/LoginForm";
+import LoginForm from "../../components/forms/LoginForm";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux"
 import { useEffect } from "react";

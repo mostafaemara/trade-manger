@@ -1,7 +1,7 @@
 const express = require("express");
 const { body, check } = require("express-validator");
 const router = express.Router();
-const { validate, shipmentValidationRules,editeShipmentValidationRules,deleteShipmentValidationRules } = require("../utils/validator");
+const { validate, shipmentValidationRules, editeShipmentValidationRules, deleteShipmentValidationRules } = require("../utils/validator");
 const shipmentsController = require("../controllers/shipment");
 const isAuth = require("../middleware/is-auth");
 const user = require("../models/user");
@@ -16,14 +16,14 @@ router.post(
 router.post(
   "/editeShipment",
   isAuth,
-  editeShipmentValidationRules() ,
+  editeShipmentValidationRules(),
   validate,
   shipmentsController.editeShipment
 );
 router.post(
   "/deleteShipment",
   isAuth,
-  deleteShipmentValidationRules() ,
+  deleteShipmentValidationRules(),
   validate,
   shipmentsController.deleteShipment
 );

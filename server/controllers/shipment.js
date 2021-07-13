@@ -178,6 +178,7 @@ exports.deleteShipment = async (req, res, next) => {
 
     res.status(201).json({
       message: "Shipment deleted successfully",
+      shipment: shipment
 
     });
 
