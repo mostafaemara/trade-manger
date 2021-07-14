@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { apiSignIn } from "../../services/api/api";
+import { login as apiLogin } from "../../services/api/api";
 import jwt from "jsonwebtoken";
 
 const initialState = {
@@ -17,7 +17,7 @@ export const loginThunk = createAsyncThunk(
   "auth/login",
   async (auth, { rejectWithValue }) => {
     try {
-      const response = await apiSignIn(auth.email, auth.password);
+      const response = await apiLogin(auth.email, auth.password);
 
       const decodedData = jwt.decode(response.token);
 
@@ -57,8 +57,7 @@ export const authSlice = createSlice({
     },
     [loginThunk.fulfilled]: (state, action) => {
       state.status = "succeeded";
-      console.log("action", action);
-      console.log("state", state);
+
       state.isAuthnticated = true;
       (state.user.name = action.payload.name),
         (state.user.email = action.payload.email),
@@ -67,7 +66,6 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
     },
     [loginThunk.rejected]: (state, action) => {
-      console.log("ERROR SSASA", action);
       state.status = "failed";
     },
   },

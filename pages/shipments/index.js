@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchShipmentsThunk } from "../../redux/store/shipments-slice";
 import "bootstrap/dist/css/bootstrap.css";
 import ShipmentsBar from "../../components/ShipmentsBar";
-import { Spinner, ButtonToolbar, Button } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import PaginationBar from "../../components/tables/PaginationBar";
 import Table from "../../components/tables/Table";
+import ErrorAlert from "../../components/ErrorAlert";
+import CellActionButtons from "../../components/CellActionButtons";
 import {
   netWeightPerKg,
   netWeightPerKantar,
@@ -21,6 +23,8 @@ import {
   selectTotalItems,
   selectShipments,
 } from "../../redux/store/shipments-slice";
+import ShipmentModal from "../../components/ShipmentModal";
+
 function ShipmentsPage() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -60,7 +64,7 @@ function ShipmentsPage() {
           pricePerKantar: shipment.pricePerKantar,
           isPriced: shipment.isPriced ? "Priced" : "Not Priced",
           creator: shipment.creator.name,
-          action: shipment._id,
+          action: shipment,
           netweightPerKg,
           netweightPerKantar,
           netPrice,
@@ -131,23 +135,9 @@ function ShipmentsPage() {
       {
         Header: "Actions",
         accessor: "action",
-        Cell: (cell) => {
-          return (
-            <ButtonToolbar>
-              <Button
-                className='m-2'
-                variant='warning'
-                disabled={!(user.authority >= 3)}>
-                Edite
-              </Button>
-              <Button
-                className='m-2'
-                variant='danger'
-                disabled={!(user.authority >= 4)}>
-                Delete
-              </Button>
-            </ButtonToolbar>
-          );
+        Cell: ({ cell }) => {
+          console.log("Cell", cell.value);
+          return <CellActionButtons shipment={cell.value}></CellActionButtons>;
         },
       },
     ],
@@ -193,7 +183,8 @@ function ShipmentsPage() {
   return (
     <PrivatePage>
       <title>Shipments</title>
-
+      <ShipmentModal></ShipmentModal>
+      <ErrorAlert></ErrorAlert>
       <ShipmentsBar></ShipmentsBar>
 
       {shipmentsStatus === "loading" ? (

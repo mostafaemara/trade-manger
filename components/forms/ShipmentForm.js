@@ -3,21 +3,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import ClientsSelect from "./ClientsSelect";
-import { addNewShipmentThunk } from "../../redux/store/shipments-slice";
+import {
+  addNewShipmentThunk,
+  hideShipmentModal,
+  editeShipmentThunk,
+} from "../../redux/store/shipments-slice";
 import * as yup from "yup";
-import { hideNewShipmentModal } from "../../redux/store/ui-slice";
-const initialValue = {
-  client: "",
-  date: "",
-  weight: "",
-  pricePerKantar: "",
-  expenses: "",
-  gauge: 2,
-  bags: "",
-  extraGauge: 1,
-  extraBags: "",
-  isPriced: true,
-};
 
 let shipmentSchema = yup.object().shape({
   client: yup.string().required("Please Select Client from The List"),
@@ -31,42 +22,75 @@ let shipmentSchema = yup.object().shape({
   extraBags: yup.number().required("Please add value"),
   isPriced: yup.bool().required(),
 });
-function NewShipmentForm(props) {
+function ShipmentForm({ shipment }) {
+  let initialValue = {};
+  if (shipment) {
+    initialValue = {
+      client: shipment.client._id,
+      date: new Date(shipment.date).toLocaleDateString("en-US"),
+      weight: shipment.weight,
+      pricePerKantar: shipment.pricePerKantar,
+      expenses: shipment.expenses,
+      gauge: shipment.gauge,
+      bags: shipment.bags,
+      extraGauge: shipment.extraGauge,
+      extraBags: shipment.extraBags,
+      isPriced: shipment.isPriced,
+    };
+  }
+
   function handleClose() {
-    dispatch(hideNewShipmentModal());
+    dispatch(hideShipmentModal());
   }
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
   const submitHandler = (values, { setSubmitting }) => {
-    dispatch(
-      addNewShipmentThunk({
-        shipment: values,
-        token: token,
-      })
-    );
+    if (shipment) {
+      dispatch(
+        editeShipmentThunk({
+          shipment: values,
+          token: token,
+        })
+      );
+    } else {
+      console.log("Shippppps", values);
+      dispatch(
+        addNewShipmentThunk({
+          shipment: values,
+          token: token,
+        })
+      );
+    }
   };
 
   return (
     <div className='d-flex justify-content-center'>
       <div className='card p-3'>
-        <h3 className='card-title'>New Shipment</h3>
+        <h3 className='card-title'>
+          {shipment ? "Edite Shipment" : "New Shipment"}
+        </h3>
 
         <div className='card-body'>
           <Formik
+            enableReinitialize={true}
             initialValues={initialValue}
             validationSchema={shipmentSchema}
             onSubmit={submitHandler}>
             {({ isSubmiting }) => (
               <Form className='row g-4'>
-                <div className='col-md-6'>
-                  <label>Client</label>
-                  <ClientsSelect></ClientsSelect>
-                  <ErrorMessage
-                    className='form-text text-danger'
-                    name='cleint'
-                    component='div'></ErrorMessage>
-                </div>
+                {!shipment ? (
+                  <div className='col-md-6'>
+                    <label>Client</label>
+                    <ClientsSelect></ClientsSelect>
+                    <ErrorMessage
+                      className='form-text text-danger'
+                      name='cleint'
+                      component='div'></ErrorMessage>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
                 <div className='col-md-6'>
                   <label>Date</label>
                   <Field
@@ -171,17 +195,13 @@ function NewShipmentForm(props) {
                     component='div'></ErrorMessage>
                 </div>
                 <div className='col-12'>
-                  {" "}
                   <button
                     onClick={handleClose}
                     type='button'
                     className='btn btn-warning m-3'>
                     Cancel
                   </button>
-                  <button
-                    className='btn btn-primary m-3'
-                    type='submit'
-                    disabled={isSubmiting}>
+                  <button className='btn btn-primary m-3' type='submit'>
                     Submit
                   </button>
                 </div>
@@ -194,4 +214,4 @@ function NewShipmentForm(props) {
   );
 }
 
-export default NewShipmentForm;
+export default ShipmentForm;

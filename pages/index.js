@@ -5,27 +5,28 @@ import { useEffect } from "react";
 
 function HomePage() {
   const dispatch = useDispatch();
-  const status = useSelector(state => state.clients.status);
+  const status = useSelector((state) => state.clients.status);
 
-
-  const token = useSelector(state => state.auth.token);
+  const token = useSelector((state) => state.auth.token);
   useEffect(() => {
-    dispatch(fetchClientsThunk({
-      token: token
-    }));
-
+    dispatch(
+      fetchClientsThunk({
+        token: token,
+      })
+    );
   }, [fetchClientsThunk]);
   return (
     <PrivatePage>
-      {status == "loading" ? <h1>Loading..</h1> :
-        <div> <title>Home</title>
+      {status == "loading" ? (
+        <h1>Loading..</h1>
+      ) : (
+        <div>
+          <title>Home</title>
           <h1>Home Page</h1>
-
-
-        </div>}</PrivatePage>
-
+        </div>
+      )}
+    </PrivatePage>
   );
 }
-
 
 export default HomePage;

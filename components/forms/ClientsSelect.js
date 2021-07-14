@@ -6,14 +6,9 @@ import { useSelector } from "react-redux";
 function ClientsSelect() {
   const clients = useSelector(selectClients);
   return (
-    <Field
-      data-live-search='true'
-      as='select'
-      className='form-select'
-      name='client'>
-      {" "}
+    <Field as='select' className='form-select' name='client'>
       {clients.map((client) => (
-        <option data-tokens={client.name} value={client._id}>
+        <option key={client._id} value={client._id}>
           {client.name}
         </option>
       ))}
