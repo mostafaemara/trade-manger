@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, ButtonToolbar } from "react-bootstrap";
+import { Button, ButtonToolbar, ButtonGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "../redux/store/auth-slice";
 import { showModal, ShowDeleteModal } from "../redux/store/shipments-slice";
@@ -13,7 +13,7 @@ function CellActionButtons({ shipment }) {
     dispatch(ShowDeleteModal(shipment._id));
   }
   return (
-    <ButtonToolbar>
+    <ButtonGroup siz='sm'>
       <Button
         onClick={handleEdite}
         className='m-2'
@@ -28,7 +28,7 @@ function CellActionButtons({ shipment }) {
         disabled={!(user.authority >= 4)}>
         Delete
       </Button>
-    </ButtonToolbar>
+    </ButtonGroup>
   );
 }
 

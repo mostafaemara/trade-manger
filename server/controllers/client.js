@@ -1,13 +1,10 @@
-const { body, validationResult } = require("express-validator");
-
 const Client = require("../models/client");
 const Shipment = require("../models/shipment");
 const Payment = require("../models/payment");
-const QueryHelper = require("../utils/query-helper");
+
 exports.getClients = (req, res, next) => {
-  const query = QueryHelper.formatQuery(req.query);
-  Client.find(query)
-  .populate("creator","name")
+  Client.find()
+    .populate("creator", "name")
     .then((clients) => {
       if (!clients) {
         const error = new Error("no Clients!");
@@ -27,8 +24,6 @@ exports.getClients = (req, res, next) => {
     });
 };
 
-
-
 exports.createClient = async (req, res, next) => {
   const name = req.body.name;
   const phoneNumber = req.body.phoneNumber;
@@ -37,145 +32,122 @@ exports.createClient = async (req, res, next) => {
     phoneNumber: phoneNumber,
     creator: req.userId,
   });
- try{
-  const createdClient = await client.save();
-  const populatedClient=await Client.populate(createdClient,{
-    path:"creator",
-    select:"name"
-  });
-
-
+  try {
+    const createdClient = await client.save();
+    const populatedClient = await Client.populate(createdClient, {
+      path: "creator",
+      select: "name",
+    });
 
     res.status(201).json({
       message: "Client created successfully",
       client: populatedClient,
     });
-
-
- 
-
-
-
- }catch(error){   if (!error.statusCode) {
-  error.statusCode = 500;
-}
-next(error);}
-
- 
-  
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
 };
 
-exports.clientsStatement= async(req,res,next)=>{
-  try{
-  const clients=await Client.find({},"name");
-  if (!clients) {
-    const error = new Error("no Clients!");
-    error.statusCode = 404;
-    throw error;
+exports.clientsStatement = async (req, res, next) => {
+  try {
+    const clients = await Client.find({}, "name");
+    if (!clients) {
+      const error = new Error("no Clients!");
+      error.statusCode = 404;
+      throw error;
+    }
+    const statements = [];
+    for (let client of clients) {
+      const shipments = await Shipment.find(
+        { client: client._id },
+        "bags gauge weight pricePerKantar expenses isPriced extraBags extraGauge"
+      );
+      const payments = await Payment.find({ client: client._id }, "cash");
+      if (!payments && !shipments) {
+        statements.push({
+          client: client,
+          debts: 0,
+          dues: 0,
+        });
+      } else {
+        const statment = calculateStatement(shipments, payments, client);
+        statements.push(statment);
+      }
+    }
+    res.json(statements);
+    console.log("Statments::" + statements.toString());
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
   }
-  const statements=[];
-for(let client of clients){
-const shipments=await Shipment.find({client:client._id},"bags gauge weight pricePerKantar expenses isPriced extraBags extraGauge");
-const payments=await Payment.find({client:client._id},"cash");
-if(!payments&&!shipments){
- statements.push({
-  client:client,
-   debts:0,
-   dues:0,
-  
-
-
- });
-} else{
- const statment=  calculateStatement(shipments,payments,client);
-  statements.push(statment);
-}
-
-
-}
-res.json( statements);
-console.log("Statments::"+ statements.toString());
-
-}
-catch (error) {
-  if (!error.statusCode) {
-    error.statusCode = 500;
-  }
-  next(error);
-}
-
-}
-function calculateStatement(shipments,payments,client){
-  const totalShipmentsPrice=calculateShipmentsPrices(shipments);
-  const totalCash= calculatePaymentsCash(payments);
-  const totalNetWeight=calculateTotalNetWeight(shipments);
-  const totalKantarWeight=calculateKantarWeight(totalNetWeight);
+};
+function calculateStatement(shipments, payments, client) {
+  const totalShipmentsPrice = calculateShipmentsPrices(shipments);
+  const totalCash = calculatePaymentsCash(payments);
+  const totalNetWeight = calculateTotalNetWeight(shipments);
+  const totalKantarWeight = calculateKantarWeight(totalNetWeight);
 
   return {
-    client:client,
-    shipments:shipments,
-    payments:payments,
-    debts:totalShipmentsPrice,
-    dues:totalCash,
-    totalNetWeight:totalNetWeight,
-    totalKantarWeight,totalKantarWeight
-  
+    client: client,
+    shipments: shipments,
+    payments: payments,
+    debts: totalShipmentsPrice,
+    dues: totalCash,
+    totalNetWeight: totalNetWeight,
+    totalKantarWeight,
+    totalKantarWeight,
   };
-
 }
-function calculatePaymentsCash(payments){
-let totalCash=0;
-  for(let payment of payments){
-    totalCash=payment.cash+totalCash;
-
+function calculatePaymentsCash(payments) {
+  let totalCash = 0;
+  for (let payment of payments) {
+    totalCash = payment.cash + totalCash;
   }
   return totalCash;
 }
 
-function calculateTotalNetWeight(shipments){
-  let totalNetWeight=0;
-  for(let shipment of shipments){
-    if(shipment.isPriced){
-    const netWeight=calculateNetWeight(shipment);
+function calculateTotalNetWeight(shipments) {
+  let totalNetWeight = 0;
+  for (let shipment of shipments) {
+    if (shipment.isPriced) {
+      const netWeight = calculateNetWeight(shipment);
 
- 
-    totalNetWeight=netWeight+totalNetWeight;
-   
-  
+      totalNetWeight = netWeight + totalNetWeight;
     }
   }
   return totalNetWeight;
-
 }
-function calculateNetWeight(shipment){
-  const netWeight=shipment.weight - (shipment.bags*shipment.gauge);
+function calculateNetWeight(shipment) {
+  const netWeight = shipment.weight - shipment.bags * shipment.gauge;
   return netWeight;
-
 }
 
-
-function calculateKantarWeight(netWeight){
-  const kantarNetWeight=(netWeight/ 157.5);
+function calculateKantarWeight(netWeight) {
+  const kantarNetWeight = netWeight / 157.5;
   return kantarNetWeight;
 }
 
-function calculateShipmentsPrices(shipments){
- 
-  let totalShipmentsPrice=0;
-  for(let shipment of shipments){
-    
-    if(shipment.isPriced){
-    totalShipmentsPrice=calculateShipmentNetPrice(shipment)+totalShipmentsPrice;
-  
+function calculateShipmentsPrices(shipments) {
+  let totalShipmentsPrice = 0;
+  for (let shipment of shipments) {
+    if (shipment.isPriced) {
+      totalShipmentsPrice =
+        calculateShipmentNetPrice(shipment) + totalShipmentsPrice;
     }
   }
   return totalShipmentsPrice;
-
 }
-function calculateShipmentNetPrice (shipment){
-  const netWeight=shipment.weight - (shipment.bags*shipment.gauge)-(shipment.extraBags*shipment.extraGauge);
-  const kantarNetWeight=(netWeight/ 157.5);
-  const price=shipment.pricePerKantar*kantarNetWeight;
-  return(price-shipment.expenses);
-
-};
+function calculateShipmentNetPrice(shipment) {
+  const netWeight =
+    shipment.weight -
+    shipment.bags * shipment.gauge -
+    shipment.extraBags * shipment.extraGauge;
+  const kantarNetWeight = netWeight / 157.5;
+  const price = shipment.pricePerKantar * kantarNetWeight;
+  return price - shipment.expenses;
+}

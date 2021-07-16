@@ -1,4 +1,5 @@
 import React from "react";
+import { Table as UiTable } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 function Table({
   getTableProps,
@@ -7,13 +8,21 @@ function Table({
   getTableBodyProps,
   prepareRow,
 }) {
+  console.log("Table", headerGroups);
   return (
     <div>
-      <table className='table table-bordered' {...getTableProps()}>
+      <UiTable
+        size='sm'
+        responsive='sm'
+        striped
+        bordered
+        hover
+        variant='light'
+        {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr
-              key={headerGroups}
+              key={headerGroup}
               className='table-primary'
               {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
@@ -38,7 +47,7 @@ function Table({
             );
           })}
         </tbody>
-      </table>
+      </UiTable>
     </div>
   );
 }

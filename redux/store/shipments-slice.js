@@ -22,6 +22,16 @@ const initialState = {
       id: "",
     },
   },
+  filter: {
+    activeClient: false,
+
+    client: "",
+    activeStartDate: false,
+
+    startDate: "",
+    activeEndDate: false,
+    endDate: "",
+  },
   totalItems: 0,
   shipments: [],
   totalPages: 0,
@@ -32,11 +42,7 @@ export const fetchShipmentsThunk = createAsyncThunk(
   "/shipments",
   async (props, { rejectWithValue }) => {
     try {
-      const response = await fetchShipments(
-        props.page,
-        props.size,
-        props.token
-      );
+      const response = await fetchShipments(props);
 
       return response;
     } catch (error) {
@@ -106,6 +112,27 @@ export const shipmentsSlice = createSlice({
     ShowDeleteModal(state, action) {
       state.ui.deleteModal.show = true;
       state.ui.deleteModal.id = action.payload;
+    },
+    toggleClientFilter(state, action) {
+      state.filter.activeClient = !state.filter.activeClient;
+    },
+    toggleStartDateFilter(state, action) {
+      state.filter.activeStartDate = !state.filter.activeStartDate;
+    },
+    toggleEndDateFilter(state, action) {
+      state.filter.activeEndDate = !state.filter.activeEndDate;
+    },
+    setClientFilter(state, action) {
+      console.log(state.filter.client);
+      state.filter.client = action.payload;
+    },
+    setStartDateFilter(state, action) {
+      console.log(state.filter.startDate);
+      state.filter.startDate = action.payload;
+    },
+    setEndDateFilter(state, action) {
+      console.log(state.filter.endDate);
+      state.filter.endDate = action.payload;
     },
   },
 
@@ -212,10 +239,17 @@ export const selectModal = (state) => state.shipments.ui.modal;
 export const selectError = (state) => state.shipments.error;
 export const selectDeleteModal = (state) => state.shipments.ui.deleteModal;
 export const selectAlert = (state) => state.shipments.ui.alert;
+export const selectFilter = (state) => state.shipments.filter;
 export const {
   hideModal,
   showModal,
   hideAlert,
   ShowDeleteModal,
   hideDeleteModal,
+  setClientFilter,
+  setEndDateFilter,
+  setStartDateFilter,
+  toggleClientFilter,
+  toggleStartDateFilter,
+  toggleEndDateFilter,
 } = shipmentsSlice.actions;

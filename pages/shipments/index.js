@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import PrivatePage from "../../components/wrapper/protect-route";
 import { useTable, usePagination } from "react-table";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchShipmentsThunk } from "../../redux/store/shipments-slice";
+import {
+  fetchShipmentsThunk,
+  selectFilter,
+} from "../../redux/store/shipments-slice";
 import "bootstrap/dist/css/bootstrap.css";
 import ShipmentsBar from "../../components/ShipmentsBar";
 import { Spinner } from "react-bootstrap";
@@ -32,6 +35,7 @@ import ShipmentsDeleteModal from "../../components/ShipmentsDeleteModal";
 
 function ShipmentsPage() {
   const dispatch = useDispatch();
+  const filter = useSelector(selectFilter);
 
   const token = useSelector(selectToken);
   const isAuthnticated = useSelector(selectIsAuthnticated);
@@ -180,13 +184,16 @@ function ShipmentsPage() {
     if (isAuthnticated) {
       dispatch(
         fetchShipmentsThunk({
-          size: pageSize,
+          client: filter.activeClient ? filter.client : "",
+          startDate: filter.activeStartDate ? filter.startDate : "",
+          endDate: filter.activeEndDate ? filter.endDate : "",
+          limit: pageSize,
           page: pageIndex + 1,
           token: token,
         })
       );
     }
-  }, [pageIndex, pageSize, dispatch, token]);
+  }, [pageIndex, pageSize, dispatch, token, filter]);
 
   return (
     <PrivatePage>

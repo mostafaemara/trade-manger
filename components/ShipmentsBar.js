@@ -1,6 +1,7 @@
-import "bootstrap/dist/css/bootstrap.css";
+import { Button, Row, Card, Form } from "react-bootstrap";
 import { showModal } from "../redux/store/shipments-slice";
 import { useDispatch } from "react-redux";
+import ShipmentFilterForm from "./forms/ShipmentFilterForm";
 
 function ShipmentsBar() {
   const dispatch = useDispatch();
@@ -11,16 +12,14 @@ function ShipmentsBar() {
 
   return (
     <div>
-      <div className='card'>
-        <div className='card-body'>
-          <button
-            type='button'
-            onClick={handleShow}
-            className='btn btn-primary'>
-            Add New Shipment
-          </button>
-        </div>
-      </div>
+      <Card>
+        <Card.Header>
+          <Button onClick={handleShow}>Add New Shipment</Button>
+        </Card.Header>
+        <Card.Body>
+          <ShipmentFilterForm></ShipmentFilterForm>
+        </Card.Body>
+      </Card>
     </div>
   );
 }

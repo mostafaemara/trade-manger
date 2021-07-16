@@ -1,11 +1,11 @@
 import axios from "axios";
-const API_BASE_URL = "http://localhost:3000";
-const API_LOGIN_PATH = "/api/login";
-const API_SHIPMENTS_PATH = "/api/shipments";
-const API_ADD_NEW_SHIPMENT_PATH = "/api/shipment";
-const API_EDITE_SHIPMENT_PATH = "/api/editeShipment";
-const API_CLIENTS_PATH = "/api/clients";
-const API_DELETE_SHIPMENT = "/api/deleteShipment";
+const API_BASE_URL = "/api";
+const API_LOGIN_PATH = "/login";
+const API_SHIPMENTS_PATH = "/shipments";
+const API_ADD_NEW_SHIPMENT_PATH = "/shipment";
+const API_EDITE_SHIPMENT_PATH = "/editeShipment";
+const API_CLIENTS_PATH = "/clients";
+const API_DELETE_SHIPMENT = "/deleteShipment";
 export const login = async (email, password) => {
   try {
     const response = await axios.post(API_BASE_URL + API_LOGIN_PATH, {
@@ -21,13 +21,28 @@ export const login = async (email, password) => {
   }
 };
 
-export const fetchShipments = async (page, size, token) => {
+export const fetchShipments = async ({
+  client,
+  startDate,
+  endDate,
+  page,
+  limit,
+  token,
+}) => {
+  const params = { page: page, limit: limit };
+  if (client) {
+    params["client"] = client;
+  }
+  if (startDate) {
+    params["dateAfter"] = startDate;
+  }
+  if (endDate) {
+    params["dateBefore"] = endDate;
+  }
+
   try {
     const response = await axios.get(API_BASE_URL + API_SHIPMENTS_PATH, {
-      params: {
-        page: page,
-        size: size,
-      },
+      params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
 

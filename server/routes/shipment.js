@@ -1,5 +1,7 @@
+const { middleware: query } = require("querymen");
+const { shipmentsQuerySchema } = require("../utils/query-schemas");
 const express = require("express");
-const { body, check } = require("express-validator");
+
 const router = express.Router();
 const {
   validate,
@@ -9,8 +11,13 @@ const {
 } = require("../utils/validator");
 const shipmentsController = require("../controllers/shipment");
 const isAuth = require("../middleware/is-auth");
-const user = require("../models/user");
-router.get("/shipments", isAuth, shipmentsController.getShipments);
+
+router.get(
+  "/shipments",
+  isAuth,
+  query(shipmentsQuerySchema),
+  shipmentsController.getShipments
+);
 router.post(
   "/shipment",
   isAuth,
