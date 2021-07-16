@@ -1,7 +1,12 @@
 const express = require("express");
 const { body, check } = require("express-validator");
 const router = express.Router();
-const { validate, shipmentValidationRules, editeShipmentValidationRules, deleteShipmentValidationRules } = require("../utils/validator");
+const {
+  validate,
+  shipmentValidationRules,
+  editeShipmentValidationRules,
+  deleteShipmentValidationRules,
+} = require("../utils/validator");
 const shipmentsController = require("../controllers/shipment");
 const isAuth = require("../middleware/is-auth");
 const user = require("../models/user");

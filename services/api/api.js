@@ -5,6 +5,7 @@ const API_SHIPMENTS_PATH = "/api/shipments";
 const API_ADD_NEW_SHIPMENT_PATH = "/api/shipment";
 const API_EDITE_SHIPMENT_PATH = "/api/editeShipment";
 const API_CLIENTS_PATH = "/api/clients";
+const API_DELETE_SHIPMENT = "/api/deleteShipment";
 export const login = async (email, password) => {
   try {
     const response = await axios.post(API_BASE_URL + API_LOGIN_PATH, {
@@ -40,7 +41,6 @@ export const fetchClients = async (token) => {
     const response = await axios.get(API_BASE_URL + API_CLIENTS_PATH, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(response);
 
     return response.data;
   } catch (error) {
@@ -94,6 +94,26 @@ export const updateShipment = async (shipment, token) => {
         weight: shipment.weight,
         pricePerKantar: shipment.pricePerKantar,
         expenses: shipment.expenses,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteShipment = async (id, token) => {
+  try {
+    const response = await axios.post(
+      API_BASE_URL + API_DELETE_SHIPMENT,
+      {
+        id: id,
       },
       {
         headers: {

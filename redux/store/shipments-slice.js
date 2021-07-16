@@ -1,18 +1,32 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchShipments, postShipment } from "../../services/api/api";
+import {
+  fetchShipments,
+  postShipment,
+  deleteShipment,
+} from "../../services/api/api";
 
 const initialState = {
-  shipment: "",
   ui: {
-    shipmentModalShow: false,
-    errorAlertShow: false,
+    modal: {
+      show: false,
+      shipment: "",
+    },
+    alert: {
+      show: false,
+      type: "",
+      title: "",
+      content: "",
+    },
+    deleteModal: {
+      show: false,
+      id: "",
+    },
   },
   totalItems: 0,
   shipments: [],
   totalPages: 0,
   currentPage: 0,
   status: "idle",
-  error: "",
 };
 export const fetchShipmentsThunk = createAsyncThunk(
   "/shipments",
@@ -54,26 +68,44 @@ export const addNewShipmentThunk = createAsyncThunk(
     }
   }
 );
+export const deleteShipmentThunk = createAsyncThunk(
+  "/delete-shipment",
+  async (props, { rejectWithValue }) => {
+    try {
+      const response = await deleteShipment(props.id, props.token);
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.request.response);
+    }
+  }
+);
 
 export const shipmentsSlice = createSlice({
   name: "shipments",
   initialState: initialState,
 
   reducers: {
-    showShipmentModal(state, action) {
+    showModal(state, action) {
       if (action.payload) {
-        console.log("shipment", action.payload);
-        state.shipment = action.payload;
+        state.ui.modal.shipment = action.payload;
       }
-      state.ui.shipmentModalShow = true;
+      state.ui.modal.show = true;
     },
 
-    hideShipmentModal(state, action) {
-      state.shipment = "";
-      state.ui.shipmentModalShow = false;
+    hideModal(state, action) {
+      state.ui.modal.shipment = "";
+      state.ui.modal.show = false;
     },
-    hideErrorAlert(state, action) {
-      state.ui.errorAlertShow = false;
+    hideAlert(state, action) {
+      state.ui.alert.show = false;
+    },
+    hideDeleteModal(state, action) {
+      state.ui.deleteModal.show = false;
+    },
+    ShowDeleteModal(state, action) {
+      state.ui.deleteModal.show = true;
+      state.ui.deleteModal.id = action.payload;
     },
   },
 
@@ -89,42 +121,84 @@ export const shipmentsSlice = createSlice({
       state.totalPages = action.payload.totalPages;
     },
     [fetchShipmentsThunk.rejected]: (state, action) => {
-      state.ui.errorAlertShow = true;
-      console.log("Error Shipments Fetching", action.meta);
+      state.ui.alert.show = true;
+      state.ui.alert.title = "Error";
+      state.ui.alert.type = "error";
+      state.ui.alert.content = "Fetching Shipments Failed!";
       state.status = "failed";
-      state.error = "Fetching Shipments Faild!";
     },
     [addNewShipmentThunk.pending]: (state, action) => {
       state.status = "loading";
-      state.ui.shipmentModalShow = false;
+      state.ui.modal.show = false;
     },
     [addNewShipmentThunk.fulfilled]: (state, action) => {
       state.status = "succeeded";
 
       state.shipments.push(action.payload.shipment);
+      state.ui.alert.show = true;
+      state.ui.alert.type = "success";
+      state.ui.alert.title = "Done!";
+      state.ui.alert.content = "Adding Shipment Success!";
     },
     [addNewShipmentThunk.rejected]: (state, action) => {
       state.status = "failed";
-      state.ui.errorAlertShow = true;
-      state.error = "Adding Shipment Faild!";
+      state.ui.alert.show = true;
+      state.ui.alert.title = "Error";
+      state.ui.alert.type = "error";
+      state.ui.alert.content = "Adding Shipment Failed!";
     },
 
     [editeShipmentThunk.pending]: (state, action) => {
       state.status = "loading";
-      state.ui.shipmentModalShow = false;
+      state.ui.modal.show = false;
     },
     [editeShipmentThunk.fulfilled]: (state, action) => {
       state.status = "succeeded";
-      console.log("Sucess Edite");
+
       const index = state.shipments.findIndex(
         (shipment) => shipment._id === action.payload.shipment._id
       );
       state.shipments[index] = action.payload.shipment;
+
+      state.ui.alert.show = true;
+      state.ui.alert.type = "success";
+      state.ui.alert.title = "Done!";
+      state.ui.alert.content = "Editing Shipment Success!";
     },
     [editeShipmentThunk.rejected]: (state, action) => {
       state.status = "failed";
-      state.ui.errorAlertShow = true;
-      state.error = "Editing Shipment Failed!";
+
+      state.ui.alert.show = true;
+      state.ui.alert.type = "error";
+      state.ui.alert.title = "Error";
+      state.ui.alert.content = "Editing Shipment Failed!";
+    },
+    [deleteShipmentThunk.pending]: (state, action) => {
+      state.status = "loading";
+      state.ui.deleteModal.show = false;
+    },
+    [deleteShipmentThunk.fulfilled]: (state, action) => {
+      state.status = "succeeded";
+
+      const index = state.shipments.findIndex(
+        (shipment) => shipment._id === action.payload.shipment._id
+      );
+      if (index > -1) {
+        state.shipments.splice(index, 1);
+      }
+
+      state.ui.alert.show = true;
+      state.ui.alert.type = "success";
+      state.ui.alert.title = "Done!";
+      state.ui.alert.content = "Deleting Shipment Success!";
+    },
+    [deleteShipmentThunk.rejected]: (state, action) => {
+      state.status = "failed";
+
+      state.ui.alert.show = true;
+      state.ui.alert.type = "error";
+      state.ui.alert.title = "Error";
+      state.ui.alert.content = "Deleting Shipment Failed!";
     },
   },
 });
@@ -134,11 +208,14 @@ export const selectShipments = (state) => state.shipments.shipments;
 export const selectTotalPages = (state) => state.shipments.totalPages;
 export const selectCurrentPage = (state) => state.shipments.currentPage;
 export const selectStatus = (state) => state.shipments.status;
-export const selectShipmentModalShow = (state) =>
-  state.shipments.ui.shipmentModalShow;
+export const selectModal = (state) => state.shipments.ui.modal;
 export const selectError = (state) => state.shipments.error;
-export const selectShipment = (state) => state.shipments.shipment;
-export const selectErrorAlertShow = (state) =>
-  state.shipments.ui.errorAlertShow;
-export const { hideShipmentModal, showShipmentModal, hideErrorAlert } =
-  shipmentsSlice.actions;
+export const selectDeleteModal = (state) => state.shipments.ui.deleteModal;
+export const selectAlert = (state) => state.shipments.ui.alert;
+export const {
+  hideModal,
+  showModal,
+  hideAlert,
+  ShowDeleteModal,
+  hideDeleteModal,
+} = shipmentsSlice.actions;

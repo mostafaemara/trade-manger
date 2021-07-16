@@ -1,21 +1,17 @@
-import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import {
-  selectShipmentModalShow,
-  showShipmentModal,
-} from "../redux/store/shipments-slice";
-import { useDispatch, useSelector } from "react-redux";
-import ShipmentForm from "./forms/ShipmentForm";
+import { showModal } from "../redux/store/shipments-slice";
+import { useDispatch } from "react-redux";
+
 function ShipmentsBar() {
   const dispatch = useDispatch();
 
   const handleShow = () => {
-    dispatch(showShipmentModal());
+    dispatch(showModal());
   };
 
   return (
     <div>
-      <div div className='card'>
+      <div className='card'>
         <div className='card-body'>
           <button
             type='button'

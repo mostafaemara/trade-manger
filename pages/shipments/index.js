@@ -8,14 +8,18 @@ import ShipmentsBar from "../../components/ShipmentsBar";
 import { Spinner } from "react-bootstrap";
 import PaginationBar from "../../components/tables/PaginationBar";
 import Table from "../../components/tables/Table";
-import ErrorAlert from "../../components/ErrorAlert";
+import ShipmentsStatusAlert from "../../components/ShipmentsStatusAlert";
 import CellActionButtons from "../../components/CellActionButtons";
+
 import {
   netWeightPerKg,
   netWeightPerKantar,
   calculateNetPrice,
 } from "../../utils/shipment-helper";
-import { selectUser, selectToken } from "../../redux/store/auth-slice";
+import {
+  selectToken,
+  selectIsAuthnticated,
+} from "../../redux/store/auth-slice";
 import {
   selectStatus,
   selectCurrentPage,
@@ -24,11 +28,13 @@ import {
   selectShipments,
 } from "../../redux/store/shipments-slice";
 import ShipmentModal from "../../components/ShipmentModal";
+import ShipmentsDeleteModal from "../../components/ShipmentsDeleteModal";
 
 function ShipmentsPage() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+
   const token = useSelector(selectToken);
+  const isAuthnticated = useSelector(selectIsAuthnticated);
   const totalPages = useSelector(selectTotalPages);
 
   const shipments = useSelector(selectShipments);
@@ -135,9 +141,8 @@ function ShipmentsPage() {
       {
         Header: "Actions",
         accessor: "action",
-        Cell: ({ cell }) => {
-          console.log("Cell", cell.value);
-          return <CellActionButtons shipment={cell.value}></CellActionButtons>;
+        Cell: function CellComponents({ cell }) {
+          return <CellActionButtons shipment={cell.value} />;
         },
       },
     ],
@@ -147,7 +152,7 @@ function ShipmentsPage() {
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0, pageSize: 50 },
       manualPagination: true,
       pageCount: totalPages,
     },
@@ -172,19 +177,23 @@ function ShipmentsPage() {
   } = table;
 
   useEffect(() => {
-    dispatch(
-      fetchShipmentsThunk({
-        size: pageSize,
-        page: pageIndex + 1,
-        token: token,
-      })
-    );
-  }, [fetchShipmentsThunk, pageIndex, pageSize]);
+    if (isAuthnticated) {
+      dispatch(
+        fetchShipmentsThunk({
+          size: pageSize,
+          page: pageIndex + 1,
+          token: token,
+        })
+      );
+    }
+  }, [pageIndex, pageSize, dispatch, token]);
+
   return (
     <PrivatePage>
       <title>Shipments</title>
       <ShipmentModal></ShipmentModal>
-      <ErrorAlert></ErrorAlert>
+      <ShipmentsStatusAlert></ShipmentsStatusAlert>
+      <ShipmentsDeleteModal></ShipmentsDeleteModal>
       <ShipmentsBar></ShipmentsBar>
 
       {shipmentsStatus === "loading" ? (

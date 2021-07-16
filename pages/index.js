@@ -2,18 +2,20 @@ import PrivatePage from "../components/wrapper/protect-route";
 import { fetchClientsThunk } from "../redux/store/clients-slice";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-
+import { selectToken, selectIsAuthnticated } from "../redux/store/auth-slice";
 function HomePage() {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.clients.status);
-
-  const token = useSelector((state) => state.auth.token);
+  const isAuthnticated = useSelector(selectIsAuthnticated);
+  const token = useSelector(selectToken);
   useEffect(() => {
-    dispatch(
-      fetchClientsThunk({
-        token: token,
-      })
-    );
+    if (isAuthnticated) {
+      dispatch(
+        fetchClientsThunk({
+          token: token,
+        })
+      );
+    }
   }, [fetchClientsThunk]);
   return (
     <PrivatePage>

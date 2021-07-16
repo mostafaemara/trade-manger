@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import ClientsSelect from "./ClientsSelect";
 import {
   addNewShipmentThunk,
-  hideShipmentModal,
+  hideModal,
   editeShipmentThunk,
 } from "../../redux/store/shipments-slice";
 import * as yup from "yup";
@@ -23,7 +23,18 @@ let shipmentSchema = yup.object().shape({
   isPriced: yup.bool().required(),
 });
 function ShipmentForm({ shipment }) {
-  let initialValue = {};
+  let initialValue = {
+    client: "",
+    date: 0,
+    weight: 0,
+    pricePerKantar: 0,
+    expenses: 0,
+    gauge: 2,
+    bags: 0,
+    extraGauge: 2,
+    extraBags: 0,
+    isPriced: true,
+  };
   if (shipment) {
     initialValue = {
       client: shipment.client._id,
@@ -40,7 +51,7 @@ function ShipmentForm({ shipment }) {
   }
 
   function handleClose() {
-    dispatch(hideShipmentModal());
+    dispatch(hideModal());
   }
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
@@ -54,7 +65,6 @@ function ShipmentForm({ shipment }) {
         })
       );
     } else {
-      console.log("Shippppps", values);
       dispatch(
         addNewShipmentThunk({
           shipment: values,
@@ -180,7 +190,7 @@ function ShipmentForm({ shipment }) {
                     component='div'></ErrorMessage>
                 </div>
                 <div className='col-2 form-check'>
-                  <label class='form-check-label' for='priced'>
+                  <label className='form-check-label' htmlFor='priced'>
                     Priced
                   </label>
                   <Field

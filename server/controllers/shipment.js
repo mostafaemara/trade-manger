@@ -2,29 +2,30 @@ const { body, validationResult, query } = require("express-validator");
 const Shipment = require("../models/shipment");
 const QueryHelper = require("../utils/query-helper");
 const { createPaytment } = require("./payment");
-const getPagination = (page, size) => {
-  const limit = size ? +size : 3;
-  const offset = page ? page * limit : 0;
 
-  return { limit, offset };
-};
 exports.getShipments = async (req, res, next) => {
   // const query = QueryHelper.formatQuery(req.query);
   const { page, size } = req.query;
-  const { limit, offset } = getPagination(page, size);
+  console.log("paginate Query", req.query);
+
   try {
-    const data = await Shipment.paginate({}, {
-      populate: [
-        {
-          path: "client",
-          select: "name"
-        },
-        {
-          path: "creator",
-          select: "name"
-        }
-      ], offset, limit
-    });
+    const data = await Shipment.paginate(
+      {},
+      {
+        populate: [
+          {
+            path: "client",
+            select: "name",
+          },
+          {
+            path: "creator",
+            select: "name",
+          },
+        ],
+        page,
+        limit: size,
+      }
+    );
 
     //.populate("client", "name").populate("creator", "name");
     if (!data) {
@@ -33,12 +34,12 @@ exports.getShipments = async (req, res, next) => {
 
       throw error;
     }
+    console.log("paginate Data", data);
     res.status(200).json({
       totalItems: data.totalDocs,
       shipments: data.docs,
       totalPages: data.totalPages,
-      currentPage: data.page - 1
-
+      currentPage: data.page - 1,
     });
   } catch (error) {
     if (!error.statusCode) {
@@ -71,27 +72,26 @@ exports.createShipment = async (req, res, next) => {
     isPriced: isPriced,
     extraGauge: extraGauge,
     date: date,
-    extraBags: extraBags
+    extraBags: extraBags,
   });
   try {
-    const createdShipment = await shipment.save()
+    const createdShipment = await shipment.save();
 
-    const populatedShipment = await Shipment.populate(createdShipment, { path: "client creator", select: "name" });
+    const populatedShipment = await Shipment.populate(createdShipment, {
+      path: "client creator",
+      select: "name",
+    });
 
     res.status(201).json({
       message: "Shipment created successfully",
       shipment: populatedShipment,
     });
-
-
   } catch {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
-
-
 };
 exports.test = (req, res, next) => {
   const queryObj = { ...req.query };
@@ -127,20 +127,23 @@ exports.editeShipment = async (req, res, next) => {
   const isPriced = req.body.isPriced;
 
   try {
-    const shipment = await Shipment.findOneAndUpdate({ "_id": id }, {
-      bags: bags,
-      gauge: gauge,
-      weight: weight,
-      pricePerKantar: pricePerKantar,
-      expenses: expenses,
-      client: client,
-      creator: req.userId,
-      isPriced: isPriced,
-      extraGauge: extraGauge,
-      date: date,
-      extraBags: extraBags
-
-    }, { new: true });
+    const shipment = await Shipment.findOneAndUpdate(
+      { _id: id },
+      {
+        bags: bags,
+        gauge: gauge,
+        weight: weight,
+        pricePerKantar: pricePerKantar,
+        expenses: expenses,
+        client: client,
+        creator: req.userId,
+        isPriced: isPriced,
+        extraGauge: extraGauge,
+        date: date,
+        extraBags: extraBags,
+      },
+      { new: true }
+    );
     if (!shipment) {
       const error = new Error("no Clients!");
       error.statusCode = 404;
@@ -148,47 +151,37 @@ exports.editeShipment = async (req, res, next) => {
       throw error;
     }
 
-    const populatedShipment = await Shipment.populate(shipment, { path: "client creator", select: "name" });
+    const populatedShipment = await Shipment.populate(shipment, {
+      path: "client creator",
+      select: "name",
+    });
 
     res.status(201).json({
       message: "Shipment edited successfully",
       shipment: populatedShipment,
     });
-
-
   } catch {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
-
-
 };
 exports.deleteShipment = async (req, res, next) => {
   const id = req.body.id;
-
 
   try {
     console.log(id);
     const shipment = await Shipment.findByIdAndRemove(id);
 
-
-
-
     res.status(201).json({
       message: "Shipment deleted successfully",
-      shipment: shipment
-
+      shipment: shipment,
     });
-
-
   } catch {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
-
-
 };
