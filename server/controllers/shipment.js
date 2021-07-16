@@ -2,7 +2,7 @@ const Shipment = require("../models/shipment");
 
 exports.getShipments = async (req, res, next) => {
   const { query, select, cursor } = req.querymen;
-  console.log("query of Shipments", query, select, cursor);
+  console.log("query of Shipments", req.query, query, select, cursor);
   const { page, limit } = req.query;
 
   try {

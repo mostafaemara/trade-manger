@@ -16,9 +16,16 @@ function ShipmentFilterForm() {
   const clients = useSelector(selectClients);
   const dispatch = useDispatch();
   let itms = clients.map((client) => (
-    <option value={client._id}>{client.name}</option>
+    <option key={client._id} value={client._id}>
+      {client.name}
+    </option>
   ));
-  itms = [<option value=''>All</option>, ...itms];
+  itms = [
+    <option key={"0123456all"} value=''>
+      All
+    </option>,
+    ...itms,
+  ];
   function handleClientChange(event) {
     dispatch(setClientFilter(event.target.value));
   }
@@ -35,7 +42,7 @@ function ShipmentFilterForm() {
     dispatch(toggleStartDateFilter());
   }
   function handleActiveEndDateChange(event) {
-    dispatch(toggleEndtDateFilter());
+    dispatch(toggleEndDateFilter());
   }
   return (
     <Form noValidate>
