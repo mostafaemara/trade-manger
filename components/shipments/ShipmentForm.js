@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
-import ClientsSelect from "./ClientsSelect";
+import ClientsSelect from "../common/ClientsSelect";
 import {
   addNewShipmentThunk,
   hideModal,

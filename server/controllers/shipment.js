@@ -36,6 +36,11 @@ exports.getShipments = async (req, res, next) => {
       shipments: data.docs,
       totalPages: data.totalPages,
       currentPage: data.page - 1,
+      hasPrevPage: data.hasPrevPage,
+      hasNextPage: data.hasNextPage,
+      prevPage: data.prevPage,
+      nextPage: data.nextPage,
+      pagingCounter: data.pagingCounter,
     });
   } catch (error) {
     if (!error.statusCode) {

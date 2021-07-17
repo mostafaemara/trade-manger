@@ -1,5 +1,5 @@
-import Layout from "../components/ui/layout";
-import NavigationBar from "../components/ui/NavigationBar";
+import Layout from "../components/layouts/layout";
+import NavigationBar from "../components/layouts/NavigationBar";
 import "../styles/globals.css";
 
 import store from "../redux/store/index";

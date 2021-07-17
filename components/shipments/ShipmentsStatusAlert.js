@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { hideAlert, selectAlert } from "../redux/store/shipments-slice";
+import { hideAlert, selectAlert } from "../../redux/store/shipments-slice";
 
 function ShipmentsStatusAlert() {
   const dispatch = useDispatch();

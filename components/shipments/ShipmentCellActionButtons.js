@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, ButtonToolbar, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUser } from "../redux/store/auth-slice";
-import { showModal, ShowDeleteModal } from "../redux/store/shipments-slice";
-function CellActionButtons({ shipment }) {
+import { selectUser } from "../..//redux/store/auth-slice";
+import { showModal, ShowDeleteModal } from "../../redux/store/shipments-slice";
+function ShipmentCellActionButtons({ shipment }) {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   function handleEdite() {
@@ -32,4 +32,4 @@ function CellActionButtons({ shipment }) {
   );
 }
 
-export default CellActionButtons;
+export default ShipmentCellActionButtons;

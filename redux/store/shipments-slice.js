@@ -32,11 +32,21 @@ const initialState = {
     activeEndDate: false,
     endDate: "",
   },
-  totalItems: 0,
+
   shipments: [],
-  totalPages: 0,
-  currentPage: 0,
+
   status: "idle",
+  pagination: {
+    limit: 30,
+    totalItems: 0,
+    canPreviousPage: "",
+    previousPage: "",
+    totalPages: 0,
+    currentPage: 0,
+
+    canNextPage: "",
+    nextPage: "",
+  },
 };
 export const fetchShipmentsThunk = createAsyncThunk(
   "/shipments",
@@ -92,6 +102,13 @@ export const shipmentsSlice = createSlice({
   initialState: initialState,
 
   reducers: {
+    setCurrentPage(state, action) {
+      console.log("Set current Page", action.payload);
+      state.pagination.currentPage = action.payload;
+    },
+    setLimit(state, action) {
+      state.pagination.limit = action.payload;
+    },
     showModal(state, action) {
       if (action.payload) {
         state.ui.modal.shipment = action.payload;
@@ -134,6 +151,9 @@ export const shipmentsSlice = createSlice({
       console.log(state.filter.endDate);
       state.filter.endDate = action.payload;
     },
+    setPagination(state, action) {
+      state.pagination = action.payload;
+    },
   },
 
   extraReducers: {
@@ -142,10 +162,16 @@ export const shipmentsSlice = createSlice({
     },
     [fetchShipmentsThunk.fulfilled]: (state, action) => {
       state.status = "succeeded";
-      state.currentPage = action.payload.currentPage;
+
+      state.pagination.currentPage = action.payload.currentPage;
       state.shipments = action.payload.shipments;
-      state.totalItems = action.payload.totalItems;
-      state.totalPages = action.payload.totalPages;
+      state.pagination.totalItems = action.payload.totalItems;
+      state.pagination.totalPages = action.payload.totalPages;
+      state.pagination.canPreviousPage = action.payload.hasPrevPage;
+      state.pagination.canNextPage = action.payload.hasNextPage;
+      state.pagination.previousPage = action.payload.prevPage;
+      state.pagination.nextPage = action.payload.nextPage;
+      state.pagination.totalPages = action.payload.totalPages;
     },
     [fetchShipmentsThunk.rejected]: (state, action) => {
       state.ui.alert.show = true;
@@ -230,17 +256,23 @@ export const shipmentsSlice = createSlice({
   },
 });
 
-export const selectTotalItems = (state) => state.shipments.totalItems;
+export const selectTotalItems = (state) =>
+  state.shipments.pagination.totalItems;
 export const selectShipments = (state) => state.shipments.shipments;
-export const selectTotalPages = (state) => state.shipments.totalPages;
-export const selectCurrentPage = (state) => state.shipments.currentPage;
+export const selectTotalPages = (state) =>
+  state.shipments.pagination.totalPages;
+export const selectLimit = (state) => state.shipments.pagination.limit;
+export const selectCurrentPage = (state) =>
+  state.shipments.pagination.currentPage;
 export const selectStatus = (state) => state.shipments.status;
 export const selectModal = (state) => state.shipments.ui.modal;
 export const selectError = (state) => state.shipments.error;
 export const selectDeleteModal = (state) => state.shipments.ui.deleteModal;
 export const selectAlert = (state) => state.shipments.ui.alert;
 export const selectFilter = (state) => state.shipments.filter;
+export const selectPagination = (state) => state.shipments.pagination;
 export const {
+  setLimit,
   hideModal,
   showModal,
   hideAlert,
@@ -252,4 +284,6 @@ export const {
   toggleClientFilter,
   toggleStartDateFilter,
   toggleEndDateFilter,
+  setPagination,
+  setCurrentPage,
 } = shipmentsSlice.actions;

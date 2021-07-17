@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import ShipmentForm from "./forms/ShipmentForm";
-import { selectModal } from "../redux/store/shipments-slice";
+import ShipmentForm from "./ShipmentForm";
+import { selectModal } from "../../redux/store/shipments-slice";
 import { useSelector } from "react-redux";
 function ShipmentModal() {
   const { show, shipment } = useSelector(selectModal);

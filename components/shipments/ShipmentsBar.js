@@ -1,7 +1,7 @@
-import { Button, Row, Card, Form } from "react-bootstrap";
-import { showModal } from "../redux/store/shipments-slice";
+import { Button, Card } from "react-bootstrap";
+import { showModal } from "../../redux/store/shipments-slice";
 import { useDispatch } from "react-redux";
-import ShipmentFilterForm from "./forms/ShipmentFilterForm";
+import ShipmentFilterForm from "./ShipmentFilterForm";
 
 function ShipmentsBar() {
   const dispatch = useDispatch();

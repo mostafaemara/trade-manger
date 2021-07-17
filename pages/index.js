@@ -1,4 +1,4 @@
-import PrivatePage from "../components/wrapper/protect-route";
+import PrivatePage from "../components/common/protect-route";
 import { fetchClientsThunk } from "../redux/store/clients-slice";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";

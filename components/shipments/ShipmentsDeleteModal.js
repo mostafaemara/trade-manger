@@ -5,8 +5,8 @@ import {
   hideDeleteModal,
   selectDeleteModal,
   deleteShipmentThunk,
-} from "../redux/store/shipments-slice";
-import { selectToken } from "../redux/store/auth-slice";
+} from "../../redux/store/shipments-slice";
+import { selectToken } from "../../redux/store/auth-slice";
 function ShipmentsDeleteModal() {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
