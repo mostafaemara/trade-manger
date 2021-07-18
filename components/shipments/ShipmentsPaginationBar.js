@@ -5,7 +5,7 @@ import {
   selectPagination,
   setCurrentPage,
 } from "../../redux/store/shipments-slice";
-function PaginationBar() {
+function ShipmentsPaginationBar() {
   const {
     canPreviousPage,
     previousPage,
@@ -30,7 +30,7 @@ function PaginationBar() {
   const dispatch = useDispatch();
   return (
     <div>
-      <Pagination size='md'>
+      <Pagination dir='rtl' size='md'>
         <Pagination.Prev disabled={!canPreviousPage} onClick={handlePrevPage} />
 
         {count.map((index) => {
@@ -55,4 +55,4 @@ function PaginationBar() {
   );
 }
 
-export default PaginationBar;
+export default ShipmentsPaginationBar;

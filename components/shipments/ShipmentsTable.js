@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Table from "../../components/common/Table";
-import { useDispatch, useSelector } from "react-redux";
-import { useTable, usePagination } from "react-table";
+import { useSelector } from "react-redux";
+import { useTable } from "react-table";
 import { Spinner } from "react-bootstrap";
 import ShipmentCellActionButtons from "../../components/shipments/ShipmentCellActionButtons";
 import {
@@ -10,15 +10,12 @@ import {
   calculateNetPrice,
 } from "../../utils/shipment-helper";
 import {
-  setPagination,
   selectStatus,
-  selectTotalPages,
   selectShipments,
 } from "../../redux/store/shipments-slice";
 function ShipmentsTable() {
-  const totalPages = useSelector(selectTotalPages);
   const shipments = useSelector(selectShipments);
-  const dispatch = useDispatch();
+
   const data = React.useMemo(
     () =>
       shipments.map((shipment) => {
@@ -39,7 +36,7 @@ function ShipmentsTable() {
 
         return {
           client: shipment.client.name,
-          date: new Date(shipment.date).toLocaleString("en-US"),
+          date: new Date(shipment.date).toLocaleString("ar-EG"),
           weight: shipment.weight,
           bags: shipment.bags,
           extraBags: shipment.extraBags,
@@ -47,7 +44,7 @@ function ShipmentsTable() {
           extraGauge: shipment.extraGauge,
           expenses: shipment.expenses,
           pricePerKantar: shipment.pricePerKantar,
-          isPriced: shipment.isPriced ? "Priced" : "Not Priced",
+          isPriced: shipment.isPriced ? "مسعر" : "غير مسعر",
           creator: shipment.creator.name,
           action: shipment,
           netweightPerKg,
@@ -61,64 +58,64 @@ function ShipmentsTable() {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Client",
+        Header: "العميل",
         accessor: "client", // accessor is the "key" in the data
       },
       {
         id: "timestamp",
-        Header: "Date",
+        Header: "التاريخ",
         accessor: "date",
       },
       {
-        Header: "Weight",
+        Header: "الوزن",
         accessor: "weight",
       },
       {
-        Header: "Net Weight(KG)",
+        Header: "الوزن الصافي  (ك.ج)",
         accessor: "netweightPerKg",
       },
       {
-        Header: "Net Weight (Kantar)",
+        Header: "الوزن الصافي (قنطار)",
         accessor: "netweightPerKantar",
       },
       {
-        Header: "Bags",
+        Header: "عدد الاكياس",
         accessor: "bags",
       },
       {
-        Header: "Extra Bags",
+        Header: "عدد الشكاير",
         accessor: "extraBags",
       },
       {
-        Header: "Gauge",
+        Header: "عيار الكيس",
         accessor: "gauge",
       },
       {
-        Header: "Extra Gauge",
+        Header: "عيار الشكاره",
         accessor: "extraGauge",
       },
       {
-        Header: "Expenses",
+        Header: "المصاريف",
         accessor: "expenses",
       },
       {
-        Header: "Price (kantar)",
+        Header: "سعر القنطار",
         accessor: "pricePerKantar",
       },
       {
-        Header: "Net Price",
+        Header: "المبلغ صافي",
         accessor: "netPrice",
       },
       {
-        Header: "Is Priced",
+        Header: "مسعر",
         accessor: "isPriced",
       },
       {
-        Header: "Creator",
+        Header: "بواسطة",
         accessor: "creator",
       },
       {
-        Header: "Actions",
+        Header: "تعديل/حزف",
         accessor: "action",
         Cell: function CellComponents({ cell }) {
           return <ShipmentCellActionButtons shipment={cell.value} />;

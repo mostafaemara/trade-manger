@@ -40,6 +40,14 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
+    setAuthntication(state, action) {
+      state.isAuthnticated = true;
+      state.user.name = action.payload.name;
+      state.user.email = action.payload.email;
+      state.user.userId = action.payload.userId;
+      state.user.authority = action.payload.authority;
+      state.token = action.payload.token;
+    },
     logout(state, action) {
       (state.user = {
         email: "",
@@ -49,6 +57,7 @@ export const authSlice = createSlice({
       }),
         (state.token = "");
       state.isAuthnticated = false;
+      localStorage.clear();
     },
   },
   extraReducers: {
@@ -64,13 +73,14 @@ export const authSlice = createSlice({
         (state.user.userId = action.payload.userId),
         (state.user.authority = action.payload.authority);
       state.token = action.payload.token;
+      localStorage.setItem("token", action.payload.token);
     },
     [loginThunk.rejected]: (state, action) => {
       state.status = "failed";
     },
   },
 });
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setAuthntication } = authSlice.actions;
 export const selectUser = (state) => state.auth.user;
 export const selectToken = (state) => state.auth.token;
 export const selectIsAuthnticated = (state) => state.auth.isAuthnticated;

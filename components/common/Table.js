@@ -12,6 +12,7 @@ function Table({
   return (
     <div>
       <UiTable
+        dir='rtl'
         size='sm'
         responsive='sm'
         striped

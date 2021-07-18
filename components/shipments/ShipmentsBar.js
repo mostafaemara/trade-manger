@@ -11,16 +11,16 @@ function ShipmentsBar() {
   };
 
   return (
-    <div>
-      <Card>
-        <Card.Header>
-          <Button onClick={handleShow}>Add New Shipment</Button>
-        </Card.Header>
-        <Card.Body>
-          <ShipmentFilterForm></ShipmentFilterForm>
-        </Card.Body>
-      </Card>
-    </div>
+    <Card dir='rtl'>
+      <Card.Header>
+        <Button className='d-flex' onClick={handleShow}>
+          اضافة شحنة جديدة
+        </Button>
+      </Card.Header>
+      <Card.Body>
+        <ShipmentFilterForm></ShipmentFilterForm>
+      </Card.Body>
+    </Card>
   );
 }
 

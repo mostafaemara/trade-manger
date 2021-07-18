@@ -7,10 +7,9 @@ import {
   selectFilter,
 } from "../../redux/store/shipments-slice";
 import "bootstrap/dist/css/bootstrap.css";
+
+import ShipmentsPaginationBar from "../../components/shipments/ShipmentsPaginationBar";
 import ShipmentsBar from "../../components/shipments/ShipmentsBar";
-
-import PaginationBar from "../../components/common/PaginationBar";
-
 import ShipmentsStatusAlert from "../../components/shipments/ShipmentsStatusAlert";
 
 import {
@@ -19,9 +18,6 @@ import {
 } from "../../redux/store/auth-slice";
 import {
   selectCurrentPage,
-  selectStatus,
-  selectTotalPages,
-  selectShipments,
   selectLimit,
   selectPagination,
 } from "../../redux/store/shipments-slice";
@@ -36,7 +32,6 @@ function ShipmentsPage() {
   const token = useSelector(selectToken);
   const isAuthnticated = useSelector(selectIsAuthnticated);
 
-  const pagination = useSelector(selectPagination);
   const limit = useSelector(selectLimit);
   const currentPage = useSelector(selectCurrentPage);
   useEffect(() => {
@@ -65,7 +60,7 @@ function ShipmentsPage() {
       <ShipmentsBar></ShipmentsBar>
 
       <ShipmentsTable></ShipmentsTable>
-      <PaginationBar></PaginationBar>
+      <ShipmentsPaginationBar></ShipmentsPaginationBar>
     </PrivatePage>
   );
 }

@@ -15,7 +15,10 @@ function ShipmentsStatusAlert() {
   }
 
   return (
-    <Alert variant={type === "error" ? "danger" : "success"} show={show}>
+    <Alert
+      dir='rtl'
+      variant={type === "error" ? "danger" : "success"}
+      show={show}>
       <Alert.Heading>{title}</Alert.Heading>
       <p> {content}</p>
     </Alert>

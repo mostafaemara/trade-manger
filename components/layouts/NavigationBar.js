@@ -26,43 +26,52 @@ function NavigationBar(props) {
   };
 
   return (
-    <Navbar collapseOnSelect sticky='top' bg='dark' variant='dark' expand='lg'>
+    <Navbar
+      dir='rtl'
+      collapseOnSelect
+      sticky='top'
+      bg='primary'
+      variant='dark'
+      expand='md'>
       <Navbar.Brand className='mx-3'>
-        <h4>Trade Manger</h4>
+        <h4>شركة شرف الدين لتجارة الاقطان</h4>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls='basic-navbar-nav' />
+      <Navbar.Toggle aria-controls='navbarScroll' />
+
       <Navbar.Collapse>
-        <Nav className='w-100 d-flex justify-content-end mx-3'>
+        <Container className='container-fluid'>
           {isAuthnticated && (
             <Nav>
               <Nav.Item>
                 <Link href='/' passHref>
-                  <Nav.Link>Home</Nav.Link>
+                  <Nav.Link>الرئيسية</Nav.Link>
                 </Link>
               </Nav.Item>
               <Nav.Item>
                 <Link href='/shipments' passHref>
-                  <Nav.Link>Shipments</Nav.Link>
+                  <Nav.Link>الشحنات</Nav.Link>
                 </Link>
               </Nav.Item>
               <Nav.Item>
                 <Link href='/payments' passHref>
-                  <Nav.Link>Payments </Nav.Link>
+                  <Nav.Link>الدفعات المالية</Nav.Link>
                 </Link>
               </Nav.Item>
               <Nav.Item>
                 <Link href='/clients' passHref>
-                  <Nav.Link>Clients</Nav.Link>
+                  <Nav.Link>العملاء</Nav.Link>
                 </Link>
-              </Nav.Item>
-              <NavDropdown title={user.email}>
-                <NavDropdown.Item onClick={logoutHandler}>
-                  LogOut
-                </NavDropdown.Item>
-              </NavDropdown>
+              </Nav.Item>{" "}
             </Nav>
-          )}
-        </Nav>
+          )}{" "}
+          <Nav>
+            <NavDropdown title={user.email}>
+              <NavDropdown.Item onClick={logoutHandler}>
+                تسجيل خروج
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Container>
       </Navbar.Collapse>
     </Navbar>
   );

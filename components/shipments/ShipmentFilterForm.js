@@ -49,7 +49,7 @@ function ShipmentFilterForm() {
       <Form.Row>
         <Col md='4'>
           <Form.Group>
-            <Form.Label>Client</Form.Label>
+            <Form.Label className='d-flex'>العميل</Form.Label>
             <InputGroup>
               <Form.Control
                 as='select'
@@ -65,7 +65,7 @@ function ShipmentFilterForm() {
         </Col>{" "}
         <Col md='4'>
           <Form.Group>
-            <Form.Label>Start Date</Form.Label>
+            <Form.Label className='d-flex'>من تاريخ</Form.Label>
             <InputGroup>
               <Form.Control
                 onChange={handleStartDateChange}
@@ -78,7 +78,7 @@ function ShipmentFilterForm() {
         </Col>
         <Col md='4'>
           <Form.Group>
-            <Form.Label>End Date</Form.Label>
+            <Form.Label className='d-flex'>الي تاريخ</Form.Label>
             <InputGroup>
               <Form.Control
                 onChange={handleEndDateChange}

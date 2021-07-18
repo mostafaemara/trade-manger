@@ -23,21 +23,21 @@ function ShipmentsDeleteModal() {
     );
   }
   return (
-    <Modal show={show}>
+    <Modal dir='rtl' show={show}>
       <Modal.Header>
-        <Modal.Title>Delete!</Modal.Title>
+        <Modal.Title>!حزف</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <p>Are you sure you want to delete this item?</p>
+        <p>هل انت متاكد انك تريد حزف هذه الشحنة؟</p>
       </Modal.Body>
 
       <Modal.Footer>
         <Button onClick={handleClose} variant='secondary'>
-          Cancel
+          الغاء
         </Button>
         <Button onClick={handleDelete} variant='danger'>
-          Delete
+          حزف
         </Button>
       </Modal.Footer>
     </Modal>

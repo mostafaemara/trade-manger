@@ -19,14 +19,14 @@ function ShipmentCellActionButtons({ shipment }) {
         className='m-2'
         variant='warning'
         disabled={!(user.authority >= 3)}>
-        Edite
+        تعديل
       </Button>
       <Button
         onClick={handleDelete}
         className='m-2'
         variant='danger'
         disabled={!(user.authority >= 4)}>
-        Delete
+        حزف
       </Button>
     </ButtonGroup>
   );
