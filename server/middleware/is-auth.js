@@ -10,8 +10,11 @@ module.exports = (req, res, next) => {
   const token = req.get("Authorization").split(" ")[1];
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, "supersecert");
+    decodedToken = jwt.verify(token, process.env.API_AUTH_KEY, {
+      algorithms: [process.env.API_AUTH_ALG],
+    });
   } catch (e) {
+    console.log("vertifying TOKEN", e);
     const error = new Error("Unauthorized Request Not Logged In!!");
     error.statusCode = 500;
     throw error;
@@ -22,6 +25,6 @@ module.exports = (req, res, next) => {
     throw error;
   }
   req.userId = decodedToken.userId;
-  console.log(decodedToken.userId + "sasasasas");
+
   next();
 };

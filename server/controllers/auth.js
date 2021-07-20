@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const { jwtSign } = require("../utils/auth-helper");
 exports.signUp = async (req, res, next) => {
   const email = req.body.email;
   const name = req.body.name;
@@ -18,18 +18,12 @@ exports.signUp = async (req, res, next) => {
     });
     user.save();
 
-    const token = jwt.sign(
-      {
-        email: user.email,
-        userId: user._id.toString(),
+    const token = jwtSign(
+      user.email,
+      user._id.toString(),
 
-        authority: user.authority,
-        name: user.name,
-      },
-      "supersecert",
-      {
-        expiresIn: "12h",
-      }
+      user.authority,
+      user.name
     );
     return res.status(201).json({
       token: token,
@@ -55,18 +49,12 @@ exports.logIn = async (req, res, next) => {
       error.statusCode = 401;
       throw error;
     }
-    const token = jwt.sign(
-      {
-        email: user.email,
-        userId: user._id.toString(),
+    const token = jwtSign(
+      user.email,
+      user._id.toString(),
 
-        authority: user.authority,
-        name: user.name,
-      },
-      "supersecert",
-      {
-        expiresIn: "12h",
-      }
+      user.authority,
+      user.name
     );
 
     return res.status(200).json({

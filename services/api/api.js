@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const API_BASE_URL = "/api";
 const API_LOGIN_PATH = "/login";
 const API_SHIPMENTS_PATH = "/shipments";
@@ -6,6 +7,7 @@ const API_ADD_NEW_SHIPMENT_PATH = "/shipment";
 const API_EDITE_SHIPMENT_PATH = "/editeShipment";
 const API_CLIENTS_PATH = "/clients";
 const API_DELETE_SHIPMENT = "/deleteShipment";
+
 export const login = async (email, password) => {
   try {
     const response = await axios.post(API_BASE_URL + API_LOGIN_PATH, {
@@ -95,7 +97,7 @@ export const postShipment = async (shipment, token) => {
 
 export const updateShipment = async (shipment, token) => {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       API_BASE_URL + API_EDITE_SHIPMENT_PATH,
       {
         id: shipment._id,
@@ -125,15 +127,16 @@ export const updateShipment = async (shipment, token) => {
 };
 export const deleteShipment = async (id, token) => {
   try {
-    const response = await axios.post(
+    const response = await axios.delete(
       API_BASE_URL + API_DELETE_SHIPMENT,
-      {
-        id: id,
-      },
+
       {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+        },
+        data: {
+          id: id,
         },
       }
     );

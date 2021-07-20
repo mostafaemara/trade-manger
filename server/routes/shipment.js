@@ -25,19 +25,19 @@ router.post(
   validate,
   shipmentsController.createShipment
 );
-router.post(
+router.put(
   "/editeShipment",
   isAuth,
   editeShipmentValidationRules(),
   validate,
   shipmentsController.editeShipment
 );
-router.post(
+router.delete(
   "/deleteShipment",
   isAuth,
   deleteShipmentValidationRules(),
   validate,
   shipmentsController.deleteShipment
 );
-router.get("/test", shipmentsController.test);
+
 module.exports = router;

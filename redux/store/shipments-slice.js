@@ -175,9 +175,9 @@ export const shipmentsSlice = createSlice({
     },
     [fetchShipmentsThunk.rejected]: (state, action) => {
       state.ui.alert.show = true;
-      state.ui.alert.title = "Error";
+      state.ui.alert.title = "خطاء";
       state.ui.alert.type = "error";
-      state.ui.alert.content = "Fetching Shipments Failed!";
+      state.ui.alert.content = "لم يتم جلب الشحنات";
       state.status = "failed";
     },
     [addNewShipmentThunk.pending]: (state, action) => {
@@ -190,15 +190,15 @@ export const shipmentsSlice = createSlice({
       state.shipments.push(action.payload.shipment);
       state.ui.alert.show = true;
       state.ui.alert.type = "success";
-      state.ui.alert.title = "Done!";
-      state.ui.alert.content = "Adding Shipment Success!";
+      state.ui.alert.title = "!تم";
+      state.ui.alert.content = "تم اضافة الشحنة بنجاح";
     },
     [addNewShipmentThunk.rejected]: (state, action) => {
       state.status = "failed";
       state.ui.alert.show = true;
-      state.ui.alert.title = "Error";
+      state.ui.alert.title = "خطاء";
       state.ui.alert.type = "error";
-      state.ui.alert.content = "Adding Shipment Failed!";
+      state.ui.alert.content = "!لم يتم اضافة الشحنة";
     },
 
     [editeShipmentThunk.pending]: (state, action) => {
@@ -215,16 +215,16 @@ export const shipmentsSlice = createSlice({
 
       state.ui.alert.show = true;
       state.ui.alert.type = "success";
-      state.ui.alert.title = "Done!";
-      state.ui.alert.content = "Editing Shipment Success!";
+      state.ui.alert.title = "!تم";
+      state.ui.alert.content = "تم تعديل الشحنة بنجاح";
     },
     [editeShipmentThunk.rejected]: (state, action) => {
       state.status = "failed";
 
       state.ui.alert.show = true;
       state.ui.alert.type = "error";
-      state.ui.alert.title = "Error";
-      state.ui.alert.content = "Editing Shipment Failed!";
+      state.ui.alert.title = "خطاء";
+      state.ui.alert.content = "لم يتم تعديل الشحنة";
     },
     [deleteShipmentThunk.pending]: (state, action) => {
       state.status = "loading";
@@ -242,8 +242,8 @@ export const shipmentsSlice = createSlice({
 
       state.ui.alert.show = true;
       state.ui.alert.type = "success";
-      state.ui.alert.title = "Done!";
-      state.ui.alert.content = "Deleting Shipment Success!";
+      state.ui.alert.title = "!تم";
+      state.ui.alert.content = "تم حزف الشحنة بنجاح";
     },
     [deleteShipmentThunk.rejected]: (state, action) => {
       state.status = "failed";

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login as apiLogin } from "../../services/api/api";
-import jwt from "jsonwebtoken";
 
+import { checkToken } from "../../utils/auth-helper";
 const initialState = {
   user: {
     email: "",
@@ -19,19 +19,19 @@ export const loginThunk = createAsyncThunk(
     try {
       const response = await apiLogin(auth.email, auth.password);
 
-      const decodedData = jwt.decode(response.token);
+      const decodedToken = checkToken(response.token);
 
       return {
-        authority: decodedData.authority,
-        email: decodedData.email,
-        exp: decodedData.exp,
-        iat: decodedData.iat,
-        name: decodedData.name,
-        userId: decodedData.userId,
+        authority: decodedToken.authority,
+        email: decodedToken.email,
+        exp: decodedToken.exp,
+        iat: decodedToken.iat,
+        name: decodedToken.name,
+        userId: decodedToken.userId,
         token: response.token,
       };
     } catch (error) {
-      return rejectWithValue(error.response.response);
+      return rejectWithValue(error);
     }
   }
 );

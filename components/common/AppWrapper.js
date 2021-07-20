@@ -7,6 +7,7 @@ import {
 } from "../../redux/store/auth-slice";
 import { fetchClientsThunk } from "../../redux/store/clients-slice";
 import jwt from "jsonwebtoken";
+import { checkToken } from "../../utils/auth-helper";
 
 function AppWrapper({ children }) {
   const dispatch = useDispatch();
@@ -16,19 +17,34 @@ function AppWrapper({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decodedData = jwt.decode(token);
-      console.log("TOKEN", decodedData);
-      dispatch(
-        setAuthntication({
-          authority: decodedData.authority,
-          email: decodedData.email,
-          exp: decodedData.exp,
-          iat: decodedData.iat,
-          name: decodedData.name,
-          userId: decodedData.userId,
-          token: token,
-        })
-      );
+      try {
+        const decodedData = checkToken(token);
+        dispatch(
+          setAuthntication({
+            authority: decodedData.authority,
+            email: decodedData.email,
+            exp: decodedData.exp,
+            iat: decodedData.iat,
+            name: decodedData.name,
+            userId: decodedData.userId,
+            token: token,
+          })
+        );
+      } catch (e) {
+        console.log("Invalid Token", e);
+        localStorage.clear();
+        dispatch(
+          setAuthntication({
+            authority: "",
+            email: "",
+            exp: "",
+            iat: "",
+            name: "",
+            userId: "",
+            token: "",
+          })
+        );
+      }
     }
   });
   useEffect(() => {
