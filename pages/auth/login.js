@@ -7,12 +7,6 @@ function AuthPage() {
   const isAuthnticated = useSelector(selectIsAuthnticated);
   const router = useRouter();
 
-  useEffect(() => {
-    if (isAuthnticated) {
-      router.replace("/");
-    }
-  });
-
   return (
     <div>
       <title>Login</title>

@@ -1,25 +1,22 @@
 const Client = require("../models/client");
 const Shipment = require("../models/shipment");
 const Payment = require("../models/payment");
-
+const HttpError = require("http-errors");
 exports.getClients = (req, res, next) => {
   Client.find()
     .populate("creator", "name")
     .then((clients) => {
       if (!clients) {
-        const error = new Error("no Clients!");
-        error.statusCode = 404;
-        throw error;
+        const error = new HttpError(404, "Client not found!");
+        next(error);
       }
       res.status(200).json({
         message: "",
         clients: clients,
       });
     })
-    .catch((error) => {
-      if (!error.status) {
-        error.statusCode = 500;
-      }
+    .catch((e) => {
+      const error = new HttpError(500, e.message || "internal error");
       next(error);
     });
 };
@@ -43,10 +40,8 @@ exports.createClient = async (req, res, next) => {
       message: "Client created successfully",
       client: populatedClient,
     });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal Error ");
     next(error);
   }
 };
@@ -55,9 +50,8 @@ exports.clientsStatement = async (req, res, next) => {
   try {
     const clients = await Client.find({}, "name");
     if (!clients) {
-      const error = new Error("no Clients!");
-      error.statusCode = 404;
-      throw error;
+      const error = new HttpError(404, "Client not found!");
+      next(error);
     }
     const statements = [];
     for (let client of clients) {
@@ -79,10 +73,8 @@ exports.clientsStatement = async (req, res, next) => {
     }
     res.json(statements);
     console.log("Statments::" + statements.toString());
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal Error ");
     next(error);
   }
 };

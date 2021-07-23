@@ -1,7 +1,8 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 const { jwtSign } = require("../utils/auth-helper");
+const HttpError = require("http-errors");
 exports.signUp = async (req, res, next) => {
   const email = req.body.email;
   const name = req.body.name;
@@ -28,10 +29,8 @@ exports.signUp = async (req, res, next) => {
     return res.status(201).json({
       token: token,
     });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!!");
     next(error);
   }
 };
@@ -45,9 +44,8 @@ exports.logIn = async (req, res, next) => {
 
     const doMatch = await bcrypt.compare(password, user.password);
     if (!doMatch) {
-      const error = Error("incorrect password");
-      error.statusCode = 401;
-      throw error;
+      const error = new HttpError(401, "Invalid password!");
+      next(error);
     }
     const token = jwtSign(
       user.email,
@@ -60,10 +58,8 @@ exports.logIn = async (req, res, next) => {
     return res.status(200).json({
       token: token,
     });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal Error!");
     next(error);
   }
 };

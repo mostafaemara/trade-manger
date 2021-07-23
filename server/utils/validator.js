@@ -1,43 +1,64 @@
 const { check, validationResult } = require("express-validator");
+const HttpError = require("http-errors");
 const User = require("../models/user");
 const Client = require("../models/client");
 const userLoginValidationRules = () => {
   return [
     check("email")
       .exists()
+      .withMessage("Email required please enter email!")
       .isEmail()
+      .withMessage("Invalid email format!")
       .custom((email) => {
         return User.findOne({ email: email }).then((user) => {
           if (!user) {
-            return Promise.reject("Email Not Registerd");
+            return Promise.reject("Email Not Registerd!");
           }
         });
       }),
-    check("password").exists().isString(),
+    check("password")
+      .exists()
+      .withMessage("Password required!")
+      .isString()
+      .withMessage("Invalid Password Format!"),
   ];
 };
 const userSignUpValidationRules = () => {
   return [
     check("email")
-      .exists()
+      .exists("Email required please enter email!")
       .withMessage("Email Is Missing")
-      .isEmail()
+      .isEmail("Invalid email format!")
       .custom((email) => {
         return User.findOne({ email: email }).then((user) => {
           if (user) {
-            return Promise.reject("E-mail already in use");
+            return Promise.reject("E-mail already in use!");
           }
         });
       }),
-    check("password").exists().isString().isLength({ min: 10 }),
-    check("authority").exists().isInt({ min: 0, max: 10 }),
-    check("name").exists().isString(),
+    check("password")
+      .exists("Password required!")
+      .isString("Invalid password format!")
+      .isLength({ min: 10 }, "Password is too short!"),
+    check("authority")
+      .exists("Authority required")
+      .isInt(
+        { min: 0, max: 10 },
+        "Invalid value please enter number between 0 to 10"
+      ),
+    check("name")
+      .exists("Name is required!")
+      .isString("invalid value text required!"),
   ];
 };
 const clientValidationRules = () => {
   return [
-    check("name").exists().isString(),
-    check("phoneNumber").exists().isString(),
+    check("name")
+      .exists("name is required!")
+      .isString("Invalid value text required"),
+    check("phoneNumber")
+      .exists("phoneNumber is required!")
+      .isString("Invalid value required text!"),
     // check("creator")
     //   .exists()
     //   .isString()
@@ -52,18 +73,36 @@ const clientValidationRules = () => {
 };
 const shipmentValidationRules = () => {
   return [
-    check("gauge").exists().isNumeric(),
-    check("extraGauge").exists().isNumeric(),
-    check("extraBags").exists().isNumeric(),
-    check("isPriced").exists().isBoolean(),
-    check("date").exists().isISO8601(),
-    check("bags").exists().isNumeric(),
-    check("weight").exists().isNumeric(),
-    check("pricePerKantar").exists().isNumeric(),
-    check("expenses").exists().isNumeric(),
+    check("gauge")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
+    check("extraGauge")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
+    check("extraBags")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
+    check("isPriced")
+      .exists("Required!")
+      .isBoolean("Invalid format required boolean"),
+    check("date")
+      .exists("Required!")
+      .isISO8601("invalid format required iso8601"),
+    check("bags")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
+    check("weight")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
+    check("pricePerKantar")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
+    check("expenses")
+      .exists("Required!")
+      .isNumeric("Invalid format required number"),
     check("client")
-      .exists()
-      .isString()
+      .exists("Required")
+      .isString("Invalid format required text")
       .custom((clientId) => {
         return Client.findById(clientId).then((client) => {
           if (!client) {
@@ -85,17 +124,19 @@ const shipmentValidationRules = () => {
 };
 const editeShipmentValidationRules = () => {
   return [
-    check("id").exists(),
-    check("gauge").optional() .isNumeric(),
-    check("extraGauge").optional() .isNumeric(),
-    check("extraBags").optional() .isNumeric(),
-    check("isPriced").optional() .isBoolean(),
-    check("date").optional() .isISO8601(),
-    check("bags").optional() .isNumeric(),
-    check("weight").optional() .isNumeric(),
-    check("pricePerKantar").optional() .isNumeric(),
-    check("expenses").optional() .isNumeric(),
- 
+    check("id").exists("Required"),
+    check("gauge").optional().isNumeric("Invalid format required number"),
+    check("extraGauge").optional().isNumeric("Invalid format required number"),
+    check("extraBags").optional().isNumeric("Invalid format required number"),
+    check("isPriced").optional().isBoolean("Invalid format required boolean"),
+    check("date").optional().isISO8601("invalid format required iso8601"),
+    check("bags").optional().isNumeric("Invalid format required number"),
+    check("weight").optional().isNumeric("Invalid format required number"),
+    check("pricePerKantar")
+      .optional()
+      .isNumeric("Invalid format required number"),
+    check("expenses").optional().isNumeric("Invalid format required number"),
+
     //   check("creator")
     //    .exists()
     //    .isString()
@@ -109,19 +150,22 @@ const editeShipmentValidationRules = () => {
   ];
 };
 const deleteShipmentValidationRules = () => {
-  return [
-    check("id").exists(),
-
-  ];
+  return [check("id").exists("Required")];
 };
 const paymentValidationRules = () => {
   return [
-    check("date").exists().isISO8601(),
-    check("recipient").exists().isString(),
-    check("cash").exists().isNumeric(),
+    check("date")
+      .exists("Required")
+      .isISO8601("invalid format required iso8601!"),
+    check("recipient")
+      .exists("Required")
+      .isString("Invalid format required text!"),
+    check("cash")
+      .exists("Required")
+      .isNumeric("Invalid format required number!"),
     check("client")
-      .exists()
-      .isString()
+      .exists("Required")
+      .isString("Invalid format required text!")
       .custom((clientId) => {
         return Client.findById(clientId).then((client) => {
           if (!client) {
@@ -146,12 +190,11 @@ const validate = (req, res, next) => {
   if (errors.isEmpty()) {
     return next();
   }
-  const extractedErrors = [];
-  errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
 
-  return res.status(422).json({
-    errors: extractedErrors,
+  const error = new HttpError(422, "Invalid Input", {
+    inputs: errors.mapped(),
   });
+  next(error);
 };
 module.exports = {
   userLoginValidationRules,
@@ -160,5 +203,6 @@ module.exports = {
   clientValidationRules,
   shipmentValidationRules,
   paymentValidationRules,
-  editeShipmentValidationRules, deleteShipmentValidationRules
+  editeShipmentValidationRules,
+  deleteShipmentValidationRules,
 };

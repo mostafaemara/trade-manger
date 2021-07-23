@@ -131,13 +131,13 @@ export const shipmentsSlice = createSlice({
       state.ui.deleteModal.id = action.payload;
     },
     toggleClientFilter(state, action) {
-      state.filter.activeClient = !state.filter.activeClient;
+      state.filter.activeClient = action.payload;
     },
     toggleStartDateFilter(state, action) {
-      state.filter.activeStartDate = !state.filter.activeStartDate;
+      state.filter.activeStartDate = action.payload;
     },
     toggleEndDateFilter(state, action) {
-      state.filter.activeEndDate = !state.filter.activeEndDate;
+      state.filter.activeEndDate = action.payload;
     },
     setClientFilter(state, action) {
       console.log(state.filter.client);
@@ -174,7 +174,9 @@ export const shipmentsSlice = createSlice({
       state.pagination.totalPages = action.payload.totalPages;
     },
     [fetchShipmentsThunk.rejected]: (state, action) => {
+      console.error("Shipment Thunk Eroor", action.payload);
       state.ui.alert.show = true;
+      state.shipments = [];
       state.ui.alert.title = "خطاء";
       state.ui.alert.type = "error";
       state.ui.alert.content = "لم يتم جلب الشحنات";

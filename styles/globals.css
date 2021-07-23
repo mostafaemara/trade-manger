@@ -5,3 +5,13 @@
 .form {
   z-index: 1;
 }
+.pagination {
+  background-color: gray;
+  width: 50vw;
+  margin: 10;
+  height: 100;
+}
+.page-item {
+  margin: 5;
+  border: 10 solid black;
+}

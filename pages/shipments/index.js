@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PrivatePage from "../../components/common/protect-route";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,18 +12,19 @@ import ShipmentsBar from "../../components/shipments/ShipmentsBar";
 import ShipmentsStatusAlert from "../../components/shipments/ShipmentsStatusAlert";
 
 import {
+  checkAuth,
   selectToken,
   selectIsAuthnticated,
 } from "../../redux/store/auth-slice";
 import {
   selectCurrentPage,
   selectLimit,
-  selectPagination,
 } from "../../redux/store/shipments-slice";
 import ShipmentModal from "../../components/shipments/ShipmentModal";
 import ShipmentsDeleteModal from "../../components/shipments/ShipmentsDeleteModal";
 import ShipmentsTable from "../../components/shipments/ShipmentsTable";
 
+import WithAuth from "../../components/common/WithAuth";
 function ShipmentsPage() {
   const dispatch = useDispatch();
   const filter = useSelector(selectFilter);
@@ -36,8 +36,7 @@ function ShipmentsPage() {
   const currentPage = useSelector(selectCurrentPage);
   useEffect(() => {
     if (isAuthnticated) {
-      console.log("Currnet page", currentPage);
-      console.log("limit", limit);
+      dispatch(checkAuth());
       dispatch(
         fetchShipmentsThunk({
           client: filter.activeClient ? filter.client : "",
@@ -52,7 +51,7 @@ function ShipmentsPage() {
   }, [currentPage, limit, dispatch, token, filter]);
 
   return (
-    <PrivatePage>
+    <>
       <title>Shipments</title>
       <ShipmentModal></ShipmentModal>
       <ShipmentsStatusAlert></ShipmentsStatusAlert>
@@ -61,8 +60,8 @@ function ShipmentsPage() {
 
       <ShipmentsTable></ShipmentsTable>
       <ShipmentsPaginationBar></ShipmentsPaginationBar>
-    </PrivatePage>
+    </>
   );
 }
 
-export default ShipmentsPage;
+export default WithAuth(ShipmentsPage);

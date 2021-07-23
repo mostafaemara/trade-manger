@@ -5,6 +5,8 @@ import {
   selectPagination,
   setCurrentPage,
 } from "../../redux/store/shipments-slice";
+import ReactPaginate from "react-paginate";
+import "bootstrap/dist/css/bootstrap.css";
 function ShipmentsPaginationBar() {
   const {
     canPreviousPage,
@@ -34,19 +36,17 @@ function ShipmentsPaginationBar() {
         <Pagination.Prev disabled={!canPreviousPage} onClick={handlePrevPage} />
 
         {count.map((index) => {
-          if (index <= 10) {
-            return (
-              <Pagination.Item
-                activeLabel={false}
-                key={index}
-                active={currentPage == index}
-                onClick={() => {
-                  handleGoToPage(index);
-                }}>
-                {index + 1}
-              </Pagination.Item>
-            );
-          }
+          return (
+            <Pagination.Item
+              activeLabel={false}
+              key={index}
+              active={currentPage == index}
+              onClick={() => {
+                handleGoToPage(index);
+              }}>
+              {index + 1}
+            </Pagination.Item>
+          );
         })}
 
         <Pagination.Next disabled={!canNextPage} onClick={handleNextPage} />

@@ -30,7 +30,7 @@ function NavigationBar(props) {
       dir='rtl'
       collapseOnSelect
       sticky='top'
-      bg='primary'
+      bg='dark'
       variant='dark'
       expand='md'>
       <Navbar.Brand className='mx-3'>

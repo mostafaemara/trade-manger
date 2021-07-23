@@ -1,9 +1,7 @@
 const Shipment = require("../models/shipment");
-
+const HttpError = require("http-errors");
 exports.getShipments = async (req, res, next) => {
   const { query, select, cursor } = req.querymen;
-  console.log("query of Shipments", req.query, query, select, cursor);
-  const { page, limit } = req.query;
 
   try {
     const data = await Shipment.paginate(query, {
@@ -25,10 +23,8 @@ exports.getShipments = async (req, res, next) => {
 
     //.populate("client", "name").populate("creator", "name");
     if (!data) {
-      const error = new Error("no Clients!");
-      error.statusCode = 404;
-
-      throw error;
+      const error = new HttpError(404, "Shipments Not Found");
+      next(error);
     }
 
     res.status(200).json({
@@ -42,10 +38,8 @@ exports.getShipments = async (req, res, next) => {
       nextPage: data.nextPage,
       pagingCounter: data.pagingCounter,
     });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
     next(error);
   }
 };
@@ -87,28 +81,10 @@ exports.createShipment = async (req, res, next) => {
       message: "Shipment created successfully",
       shipment: populatedShipment,
     });
-  } catch {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
     next(error);
   }
-};
-exports.test = (req, res, next) => {
-  const queryObj = { ...req.query };
-  let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(
-    /\b(gte)|(gt)|(lte)|(lt)\b/g,
-    (match) => `$${match}`
-  );
-
-  next();
-
-  Shipment.find(req.query)
-    .then((shipments) => {
-      next();
-    })
-    .catch((error) => {});
 };
 
 exports.editeShipment = async (req, res, next) => {
@@ -143,10 +119,8 @@ exports.editeShipment = async (req, res, next) => {
       { new: true }
     );
     if (!shipment) {
-      const error = new Error("no Clients!");
-      error.statusCode = 404;
-
-      throw error;
+      const error = new HttpError(404, "Shipment not found!");
+      next(error);
     }
 
     const populatedShipment = await Shipment.populate(shipment, {
@@ -158,10 +132,8 @@ exports.editeShipment = async (req, res, next) => {
       message: "Shipment edited successfully",
       shipment: populatedShipment,
     });
-  } catch {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
     next(error);
   }
 };
@@ -170,15 +142,16 @@ exports.deleteShipment = async (req, res, next) => {
 
   try {
     const shipment = await Shipment.findByIdAndRemove(id);
-
+    if (!shipment) {
+      const error = new HttpError(404, "Shipment not found!");
+      next(error);
+    }
     res.status(201).json({
       message: "Shipment deleted successfully",
       shipment: shipment,
     });
-  } catch {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
     next(error);
   }
 };

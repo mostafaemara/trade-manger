@@ -36,13 +36,14 @@ function ShipmentFilterForm() {
     dispatch(setEndDateFilter(event.target.value));
   }
   function handleActiveClientChange(event) {
-    dispatch(toggleClientFilter());
+    console.warn("Togle Client Filter", event.target.checked);
+    dispatch(toggleClientFilter(event.target.checked));
   }
   function handleActiveStartDateChange(event) {
-    dispatch(toggleStartDateFilter());
+    dispatch(toggleStartDateFilter(event.target.checked));
   }
   function handleActiveEndDateChange(event) {
-    dispatch(toggleEndDateFilter());
+    dispatch(toggleEndDateFilter(event.target.checked));
   }
   return (
     <Form noValidate>

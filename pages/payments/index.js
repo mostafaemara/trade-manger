@@ -1,15 +1,16 @@
 import React from "react";
-import PrivatePage from "../../components/common/protect-route";
+import WithAuth from "../../components/common/WithAuth";
+
 function PaymentsPage() {
   return (
-    <PrivatePage>
+    <>
       {" "}
       <div>
         <title>Payments</title>
         <h1>Payments Page</h1>
       </div>
-    </PrivatePage>
+    </>
   );
 }
-
-export default PaymentsPage;
+WithAuth;
+export default WithAuth(PaymentsPage);

@@ -1,6 +1,6 @@
 const Payment = require("../models/payment");
 const Client = require("../models/client");
-
+const HttpError = require("http-errors");
 exports.getPayments = async (req, res, next) => {
   try {
     const payments = await Payment.find()
@@ -8,18 +8,15 @@ exports.getPayments = async (req, res, next) => {
       .populate("creator", "name");
 
     if (!payments) {
-      const error = Error("no Payments FOund");
-      error.statusCode = 404;
-      throw error;
+      const error = new HttpError(404, "No payments found!");
+      next(error);
     }
     res.status(200).json({
       messege: "payments fetched Succes",
       payments: payments,
     });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.messege || "Internal error");
     next(error);
   }
 };
@@ -45,10 +42,8 @@ exports.createPaytment = async (req, res, next) => {
       messege: "payment cteated Successfully",
       payment: populatedPayment,
     });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
+  } catch (e) {
+    const error = new HttpError(500, e.messege || "Internal error");
     next(error);
   }
 };

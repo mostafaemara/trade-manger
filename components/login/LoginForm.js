@@ -2,12 +2,13 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import "bootstrap/dist/css/bootstrap.css";
 import { useSelector, useDispatch } from "react-redux";
 import * as yup from "yup";
-
+import { Alert } from "react-bootstrap";
 import {
   loginThunk,
   logout,
   selectAuthStatus,
   selectUser,
+  selectError,
   selectIsAuthnticated,
 } from "../../redux/store/auth-slice";
 
@@ -30,7 +31,7 @@ function LoginForm(props) {
   };
 
   const authStatus = useSelector(selectAuthStatus);
-
+  const error = useSelector(selectError);
   const dispatch = useDispatch();
   if (authStatus == "succeeded") {
   }
@@ -81,6 +82,9 @@ function LoginForm(props) {
                 <button type='button' className='btn btn-link'>
                   Dont have Acount? Signup
                 </button>
+                {authStatus === "failed" && (
+                  <Alert variant='danger'>{error.message}</Alert>
+                )}
               </Form>
             )}
           </Formik>

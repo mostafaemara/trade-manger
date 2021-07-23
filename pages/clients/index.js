@@ -1,15 +1,16 @@
-import React from "react";
-import PrivatePage from "../../components/common/protect-route";
+import React, { Fragment } from "react";
+
+import WithAuth from "../../components/common/WithAuth";
 function ClientsPage() {
   return (
-    <PrivatePage>
+    <Fragment>
       {" "}
       <div>
         <title>Clients</title>
         <h1>Clients Page</h1>
       </div>
-    </PrivatePage>
+    </Fragment>
   );
 }
 
-export default ClientsPage;
+export default WithAuth(ClientsPage);
