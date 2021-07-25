@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const { jwtSign } = require("../utils/auth-helper");
 const HttpError = require("http-errors");
+
 exports.signUp = async (req, res, next) => {
   const email = req.body.email;
   const name = req.body.name;

@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-
+const API_AUTH_KEY = "ScCt3mkV+evE3WwtyaxB45YVRveH0uM0";
+const API_AUTH_ALG = "HS256";
+const API_AUTH_EXP = "12h";
 exports.jwtSign = (
   email,
   userId,
@@ -15,8 +17,8 @@ exports.jwtSign = (
       authority,
       name,
     },
-    process.env.API_AUTH_KEY,
-    { algorithm: process.env.API_AUTH_ALG, expiresIn: process.env.API_AUTH_EXP }
+    API_AUTH_KEY,
+    { algorithm: API_AUTH_ALG, expiresIn: API_AUTH_EXP }
   );
 
   return token;
