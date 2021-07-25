@@ -4,8 +4,13 @@ module.exports = {
     return [
       {
         source: "/api",
-        destination: "http://trade-manger.herokuapp.com/api",
+        destination: "https://trade-manger.herokuapp.com/api",
       },
     ];
+  },
+  env: {
+    API_AUTH_KEY: "ScCt3mkV+evE3WwtyaxB45YVRveH0uM0",
+    API_AUTH_ALG: "HS256",
+    API_AUTH_EXP: "12h",
   },
 };
