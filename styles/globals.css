@@ -6,12 +6,41 @@
   z-index: 1;
 }
 .pagination {
-  background-color: gray;
-  width: 50vw;
-  margin: 10;
-  height: 100;
+  margin: 20px;
+  flex-direction: row;
+  display: flex;
 }
-.page-item {
-  margin: 5;
-  border: 10 solid black;
+.next,
+.prev,
+.break,
+.page {
+  text-align: center;
+  background-color: white;
+
+  border: 1px solid #dcdfe3;
+  width: 50px;
+}
+.next,
+.prev,
+.break,
+.page {
+  text-align: center;
+  background-color: white;
+
+  border: 1px solid #dcdfe3;
+  width: 50px;
+  padding: 5px;
+}
+.active {
+  background-color: #c3d2eb;
+}
+.page:hover {
+  background-color: #edf0f5;
+}
+.link {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  padding: 2em;
+  margin: -2em;
 }

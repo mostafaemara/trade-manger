@@ -25,33 +25,27 @@ function ShipmentsPaginationBar() {
     dispatch(setCurrentPage(previousPage));
   }
   function handleGoToPage(index) {
-    dispatch(setCurrentPage(index));
+    dispatch(setCurrentPage(index.selected));
   }
   const count = Array.from(Array(totalPages).keys());
 
   const dispatch = useDispatch();
   return (
-    <div>
-      <Pagination dir='rtl' size='md'>
-        <Pagination.Prev disabled={!canPreviousPage} onClick={handlePrevPage} />
-
-        {count.map((index) => {
-          return (
-            <Pagination.Item
-              activeLabel={false}
-              key={index}
-              active={currentPage == index}
-              onClick={() => {
-                handleGoToPage(index);
-              }}>
-              {index + 1}
-            </Pagination.Item>
-          );
-        })}
-
-        <Pagination.Next disabled={!canNextPage} onClick={handleNextPage} />
-      </Pagination>
-    </div>
+    <ReactPaginate
+      nextClassName='next'
+      previousClassName='prev'
+      breakLabel='...'
+      containerClassName='pagination'
+      pageClassName='page'
+      onPageChange={handleGoToPage}
+      previousLabel='السابق'
+      nextLabel='التالي'
+      pageCount={totalPages}
+      pageRangeDisplayed={10}
+      activeClassName='active'
+      pageLinkClassName='link'
+      nextLinkClassName='link'
+      previousLinkClassName='link'></ReactPaginate>
   );
 }
 
