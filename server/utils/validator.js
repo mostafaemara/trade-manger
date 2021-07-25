@@ -28,7 +28,8 @@ const userSignUpValidationRules = () => {
     check("email")
       .exists("Email required please enter email!")
       .withMessage("Email Is Missing")
-      .isEmail("Invalid email format!")
+      .isEmail()
+      .withMessage("Invalid email format!")
       .custom((email) => {
         return User.findOne({ email: email }).then((user) => {
           if (user) {
