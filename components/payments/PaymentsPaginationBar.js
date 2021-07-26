@@ -1,13 +1,13 @@
 import React from "react";
-import { Pagination } from "react-bootstrap";
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPagination,
   setCurrentPage,
-} from "../../redux/store/shipments-slice";
+} from "../../redux/store/payments-slice";
 import ReactPaginate from "react-paginate";
 import "bootstrap/dist/css/bootstrap.css";
-function ShipmentsPaginationBar() {
+function PaymentsPaginationBar() {
   const {
     canPreviousPage,
     previousPage,
@@ -27,7 +27,6 @@ function ShipmentsPaginationBar() {
   function handleGoToPage(index) {
     dispatch(setCurrentPage(index.selected));
   }
-  const count = Array.from(Array(totalPages).keys());
 
   const dispatch = useDispatch();
   return (
@@ -49,4 +48,4 @@ function ShipmentsPaginationBar() {
   );
 }
 
-export default ShipmentsPaginationBar;
+export default PaymentsPaginationBar;

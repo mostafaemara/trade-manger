@@ -7,6 +7,7 @@ const API_ADD_NEW_SHIPMENT_PATH = "/shipment";
 const API_EDITE_SHIPMENT_PATH = "/editeShipment";
 const API_CLIENTS_PATH = "/clients";
 const API_DELETE_SHIPMENT = "/deleteShipment";
+const API_PAYMENTS_PATH = "/payments";
 
 export const login = async (email, password) => {
   try {
@@ -140,6 +141,38 @@ export const deleteShipment = async (id, token) => {
         },
       }
     );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//fetch  payments
+export const fetchPayments = async ({
+  client,
+  startDate,
+  endDate,
+  page,
+  limit,
+  token,
+}) => {
+  const params = { page: page, limit: limit };
+  if (client) {
+    params["client"] = client;
+  }
+  if (startDate) {
+    params["dateAfter"] = startDate;
+  }
+  if (endDate) {
+    params["dateBefore"] = endDate;
+  }
+
+  try {
+    const response = await axios.get(API_BASE_URL + API_PAYMENTS_PATH, {
+      params: params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     return response.data;
   } catch (error) {

@@ -20,3 +20,23 @@ exports.shipmentsQuerySchema = new Schema(
   },
   {}
 );
+exports.PaymentsQuerySchema = new Schema(
+  {
+    dateBefore: {
+      type: Date,
+      paths: ["date"],
+      operator: "$lte",
+    },
+    dateAfter: {
+      type: Date,
+      paths: ["date"],
+      operator: "$gte",
+    },
+
+    client: {
+      type: String,
+      path: "_id",
+    },
+  },
+  {}
+);
