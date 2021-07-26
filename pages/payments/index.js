@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import PaymentsPaginationBar from "../../components/payments/PaymentsPaginationBar";
 import PaymentsBar from "../../components/payments/PaymentsBar";
-import PaymentsStatusAlert from "../../components/Payments/PaymentsStatusAlert";
+import PaymentsStatusAlert from "../../components/payments/PaymentsStatusAlert";
 
 import {
   checkAuth,
