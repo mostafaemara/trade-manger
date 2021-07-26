@@ -1,3 +1,7 @@
+* {
+  direction: rtl;
+}
+
 .bg-app {
   color: white;
   background-color: cadetblue;

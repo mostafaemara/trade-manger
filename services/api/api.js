@@ -74,7 +74,7 @@ export const postShipment = async (shipment, token) => {
         date: shipment.date,
         gauge: shipment.gauge,
         extraGauge: shipment.extraGauge,
-        bags: shipment.gauge,
+        bags: shipment.bags,
         extraBags: shipment.extraBags,
         isPriced: shipment.isPriced,
         weight: shipment.weight,
@@ -100,12 +100,12 @@ export const updateShipment = async (shipment, token) => {
     const response = await axios.put(
       API_BASE_URL + API_EDITE_SHIPMENT_PATH,
       {
-        id: shipment._id,
+        id: shipment.id,
         client: shipment.client,
         date: shipment.date,
         gauge: shipment.gauge,
         extraGauge: shipment.extraGauge,
-        bags: shipment.gauge,
+        bags: shipment.bags,
         extraBags: shipment.extraBags,
         isPriced: shipment.isPriced,
         weight: shipment.weight,

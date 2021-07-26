@@ -3,6 +3,7 @@ import {
   fetchShipments,
   postShipment,
   deleteShipment,
+  updateShipment,
 } from "../../services/api/api";
 
 const initialState = {
@@ -64,7 +65,8 @@ export const editeShipmentThunk = createAsyncThunk(
   "/edite-shipment",
   async (props, { rejectWithValue }) => {
     try {
-      const response = await postShipment(props.shipment, props.token);
+      console.log("Edite shipmentzzzzzzzz", props);
+      const response = await updateShipment(props.shipment, props.token);
 
       return response;
     } catch (error) {
@@ -112,6 +114,8 @@ export const shipmentsSlice = createSlice({
     showModal(state, action) {
       if (action.payload) {
         state.ui.modal.shipment = action.payload;
+      } else {
+        state.ui.modal.shipment = "";
       }
       state.ui.modal.show = true;
     },

@@ -45,6 +45,7 @@ exports.getShipments = async (req, res, next) => {
 };
 
 exports.createShipment = async (req, res, next) => {
+  console.log("Hellozzzzzzzz create Shipment");
   const bags = req.body.bags;
   const gauge = req.body.gauge;
   const weight = req.body.weight;
@@ -99,7 +100,7 @@ exports.editeShipment = async (req, res, next) => {
   const date = req.body.date;
   const extraGauge = req.body.extraGauge;
   const isPriced = req.body.isPriced;
-
+  console.log("Hellozzzzzzzz edite Shipment");
   try {
     const shipment = await Shipment.findOneAndUpdate(
       { _id: id },
