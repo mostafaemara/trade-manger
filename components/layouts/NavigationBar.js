@@ -64,13 +64,15 @@ function NavigationBar(props) {
               </Nav.Item>{" "}
             </Nav>
           )}{" "}
-          <Nav>
-            <NavDropdown title={user.email}>
-              <NavDropdown.Item onClick={logoutHandler}>
-                تسجيل خروج
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
+          {isAuthnticated && (
+            <Nav>
+              <NavDropdown title={user.email}>
+                <NavDropdown.Item onClick={logoutHandler}>
+                  تسجيل خروج
+                </NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
+          )}
         </Container>
       </Navbar.Collapse>
     </Navbar>
