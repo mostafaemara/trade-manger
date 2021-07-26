@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchShipmentsThunk,
   selectFilter,
+  selectRefresh,
 } from "../../redux/store/shipments-slice";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -31,6 +32,7 @@ function ShipmentsPage() {
 
   const token = useSelector(selectToken);
   const isAuthnticated = useSelector(selectIsAuthnticated);
+  const refresh = useSelector(selectRefresh);
 
   const limit = useSelector(selectLimit);
   const currentPage = useSelector(selectCurrentPage);
@@ -48,8 +50,8 @@ function ShipmentsPage() {
         })
       );
     }
-  }, [currentPage, limit, dispatch, token, filter]);
-
+  }, [currentPage, limit, dispatch, token, filter, refresh]);
+  console.log("Refresh", refresh);
   return (
     <>
       <title>Shipments</title>

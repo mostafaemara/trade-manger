@@ -7,6 +7,7 @@ import {
 } from "../../services/api/api";
 
 const initialState = {
+  refresh: 1,
   ui: {
     modal: {
       show: false,
@@ -192,8 +193,7 @@ export const shipmentsSlice = createSlice({
     },
     [addNewShipmentThunk.fulfilled]: (state, action) => {
       state.status = "succeeded";
-
-      state.shipments.push(action.payload.shipment);
+      state.refresh++;
       state.ui.alert.show = true;
       state.ui.alert.type = "success";
       state.ui.alert.title = "!تم";
@@ -277,6 +277,7 @@ export const selectDeleteModal = (state) => state.shipments.ui.deleteModal;
 export const selectAlert = (state) => state.shipments.ui.alert;
 export const selectFilter = (state) => state.shipments.filter;
 export const selectPagination = (state) => state.shipments.pagination;
+export const selectRefresh = (state) => state.shipments.refresh;
 export const {
   setLimit,
   hideModal,

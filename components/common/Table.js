@@ -12,13 +12,11 @@ function Table({
   return (
     <div>
       <UiTable
-        dir='rtl'
         size='sm'
         responsive='sm'
-        striped
         bordered
         hover
-        variant='light'
+        variant='outline-dark'
         {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
