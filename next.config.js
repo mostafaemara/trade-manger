@@ -4,7 +4,7 @@ module.exports = {
     return [
       {
         source: "/api",
-        destination: "https://trade-manger.herokuapp.com/api",
+        destination: "http://localhost:3000/api",
       },
     ];
   },

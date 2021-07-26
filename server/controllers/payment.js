@@ -45,12 +45,13 @@ exports.createPaytment = async (req, res, next) => {
   const recipient = req.body.recipient;
   const cash = req.body.cash;
   const client = req.body.client;
-
+  const date = req.body.date;
   const payment = Payment({
     recipient: recipient,
     cash: cash,
     client: client,
     creator: req.userId,
+    date: date,
   });
   try {
     const createdPayment = await payment.save();
@@ -65,6 +66,62 @@ exports.createPaytment = async (req, res, next) => {
     });
   } catch (e) {
     const error = new HttpError(500, e.messege || "Internal error");
+    next(error);
+  }
+};
+
+exports.editePayment = async (req, res, next) => {
+  const id = req.body.id;
+  const recipient = req.body.recipient;
+  const cash = req.body.cash;
+
+  const date = req.body.date;
+  try {
+    const payment = await Payment.findOneAndUpdate(
+      { _id: id },
+      {
+        recipient: recipient,
+        cash: cash,
+
+        creator: req.userId,
+        date: date,
+      },
+      { new: true }
+    );
+    if (!payment) {
+      const error = new HttpError(404, "Payment not found!");
+      next(error);
+    }
+
+    const populatedPayment = await Payment.populate(payment, {
+      path: "client creator",
+      select: "name",
+    });
+
+    res.status(201).json({
+      message: "Payment edited successfully",
+      payment: populatedPayment,
+    });
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
+    next(error);
+  }
+};
+exports.deletePayment = async (req, res, next) => {
+  const id = req.body.id;
+
+  try {
+    const payment = await Payment.findByIdAndRemove(id);
+    if (!payment) {
+      const error = new HttpError(404, "Payment not found!");
+      next(error);
+    }
+    res.status(201).json({
+      message: "Payment deleted successfully",
+      payment: payment,
+    });
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
     next(error);
   }
 };

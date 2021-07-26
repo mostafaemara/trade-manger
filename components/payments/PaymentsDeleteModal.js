@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   hideDeleteModal,
   selectDeleteModal,
-  deletePaymentsThunk,
+  deletePaymentThunk,
 } from "../../redux/store/payments-slice";
 import { selectToken } from "../../redux/store/auth-slice";
 function PaymentsDeleteModal() {
@@ -15,8 +15,9 @@ function PaymentsDeleteModal() {
     dispatch(hideDeleteModal());
   }
   function handleDelete() {
+    console.log("handle delte", id);
     dispatch(
-      deletePaymentsThunk({
+      deletePaymentThunk({
         token: token,
         id: id,
       })

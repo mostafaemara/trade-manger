@@ -26,14 +26,14 @@ router.post(
   shipmentsController.createShipment
 );
 router.put(
-  "/editeShipment",
+  "/shipment",
   isAuth,
   editeShipmentValidationRules(),
   validate,
   shipmentsController.editeShipment
 );
 router.delete(
-  "/deleteShipment",
+  "/shipment",
   isAuth,
   deleteShipmentValidationRules(),
   validate,

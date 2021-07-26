@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchPayments } from "../../services/api/api";
+import {
+  fetchPayments,
+  deletePayment,
+  updatePayment,
+  postPayment,
+} from "../../services/api/api";
 
 const initialState = {
   refresh: 1,
@@ -62,21 +67,24 @@ export const editePaymentThunk = createAsyncThunk(
   async (props, { rejectWithValue }) => {
     try {
       // console.log("Edite Paymentzzzzzzzz", props);
-      //  const response = await updatePayment(props.Payment, props.token);
-      //   return response;
+      const response = await updatePayment(props.payment, props.token);
+
+      return response;
     } catch (error) {
-      //    return rejectWithValue(error.request.response);
+      return rejectWithValue(error.request.response);
     }
   }
 );
 export const addNewPaymentThunk = createAsyncThunk(
   "/new-payment",
   async (props, { rejectWithValue }) => {
+    console.log("post paymentz", props);
     try {
-      //  const response = await postPayment(props.Payment, props.token);
-      // return response;
+      const response = await postPayment(props.payment, props.token);
+      return response;
     } catch (error) {
-      //  return rejectWithValue(error.request.response);
+      console.log("post paymentz", error.request.response);
+      return rejectWithValue(error.request.response);
     }
   }
 );
@@ -84,10 +92,10 @@ export const deletePaymentThunk = createAsyncThunk(
   "/delete-payment",
   async (props, { rejectWithValue }) => {
     try {
-      //const response = await deletePayment(props.id, props.token);
-      // return response;
+      const response = await deletePayment(props.id, props.token);
+      return response;
     } catch (error) {
-      //   return rejectWithValue(error.request.response);
+      return rejectWithValue(error.request.response);
     }
   }
 );

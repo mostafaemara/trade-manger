@@ -13,7 +13,7 @@ function PaymentsTable() {
     () =>
       payments.map((payment) => {
         return {
-          client: payment.client.name,
+          client: payment.client ? payment.client.name : "Error",
           date: new Date(payment.date).toLocaleString("ar-EG"),
 
           recipient: payment.recipient,

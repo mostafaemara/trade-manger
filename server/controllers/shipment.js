@@ -95,7 +95,7 @@ exports.editeShipment = async (req, res, next) => {
   const weight = req.body.weight;
   const pricePerKantar = req.body.pricePerKantar;
   const expenses = req.body.expenses;
-  const client = req.body.client;
+
   const extraBags = req.body.extraBags;
   const date = req.body.date;
   const extraGauge = req.body.extraGauge;
@@ -110,7 +110,7 @@ exports.editeShipment = async (req, res, next) => {
         weight: weight,
         pricePerKantar: pricePerKantar,
         expenses: expenses,
-        client: client,
+
         creator: req.userId,
         isPriced: isPriced,
         extraGauge: extraGauge,

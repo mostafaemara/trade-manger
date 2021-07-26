@@ -186,6 +186,28 @@ const paymentValidationRules = () => {
     //    }),
   ];
 };
+const editePaymentValidationRules = () => {
+  return [
+    check("id").exists("Required").withMessage("Required id"),
+    check("date").optional().isISO8601("invalid format required iso8601!"),
+    check("recipient").optional().isString("Invalid format required text!"),
+    check("cash").optional().isNumeric("Invalid format required number!"),
+
+    // check("creator")
+    //   .exists()
+    //    .isString()
+    //     .custom((userId) => {
+    //       return User.findById(userId).then((user) => {
+    //        if (!user) {
+    //          return Promise.reject("Creator Not Exisit");
+    //       }
+    //  });
+    //    }),
+  ];
+};
+const deletePaymentValidationRules = () => {
+  return [check("id").exists("Required").withMessage("Required id")];
+};
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
@@ -206,4 +228,6 @@ module.exports = {
   paymentValidationRules,
   editeShipmentValidationRules,
   deleteShipmentValidationRules,
+  editePaymentValidationRules,
+  deletePaymentValidationRules,
 };

@@ -3,11 +3,12 @@ import axios from "axios";
 const API_BASE_URL = "/api";
 const API_LOGIN_PATH = "/login";
 const API_SHIPMENTS_PATH = "/shipments";
-const API_ADD_NEW_SHIPMENT_PATH = "/shipment";
-const API_EDITE_SHIPMENT_PATH = "/editeShipment";
+const API_SHIPMENT_PATH = "/shipment";
+
 const API_CLIENTS_PATH = "/clients";
-const API_DELETE_SHIPMENT = "/deleteShipment";
+
 const API_PAYMENTS_PATH = "/payments";
+const API_PAYMENT_PATH = "/payment";
 
 export const login = async (email, password) => {
   try {
@@ -69,7 +70,7 @@ export const fetchClients = async (token) => {
 export const postShipment = async (shipment, token) => {
   try {
     const response = await axios.post(
-      API_BASE_URL + API_ADD_NEW_SHIPMENT_PATH,
+      API_BASE_URL + API_SHIPMENT_PATH,
       {
         client: shipment.client,
         date: shipment.date,
@@ -99,7 +100,7 @@ export const postShipment = async (shipment, token) => {
 export const updateShipment = async (shipment, token) => {
   try {
     const response = await axios.put(
-      API_BASE_URL + API_EDITE_SHIPMENT_PATH,
+      API_BASE_URL + API_SHIPMENT_PATH,
       {
         id: shipment.id,
         client: shipment.client,
@@ -129,7 +130,7 @@ export const updateShipment = async (shipment, token) => {
 export const deleteShipment = async (id, token) => {
   try {
     const response = await axios.delete(
-      API_BASE_URL + API_DELETE_SHIPMENT,
+      API_BASE_URL + API_SHIPMENT_PATH,
 
       {
         headers: {
@@ -173,6 +174,78 @@ export const fetchPayments = async ({
       params: params,
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postPayment = async (payment, token) => {
+  try {
+    const response = await axios.post(
+      API_BASE_URL + API_PAYMENT_PATH,
+      {
+        client: payment.client,
+
+        date: payment.date,
+
+        recipient: payment.recipient,
+        cash: payment.cash,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updatePayment = async (payment, token) => {
+  try {
+    const response = await axios.put(
+      API_BASE_URL + API_PAYMENT_PATH,
+      {
+        id: payment.id,
+
+        date: payment.date,
+
+        recipient: payment.recipient,
+        cash: payment.cash,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deletePayment = async (id, token) => {
+  try {
+    const response = await axios.delete(
+      API_BASE_URL + API_PAYMENT_PATH,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          id: id,
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
