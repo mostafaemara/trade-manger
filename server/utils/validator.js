@@ -72,6 +72,38 @@ const clientValidationRules = () => {
     //  }),
   ];
 };
+const editeClientValidationRules = () => {
+  return [
+    check("id").exists().withMessage("id is Required"),
+    check("name").optional().isString("Invalid value text required"),
+    check("phoneNumber").optional().isString("Invalid value required text!"),
+    // check("creator")
+    //   .exists()
+    //   .isString()
+    //  .custom((userId) => {
+    //    return User.findById(userId).then((user) => {
+    //    if (!user) {
+    //      return Promise.reject("Creator Not Exisit");
+    //    }
+    //  });
+    //  }),
+  ];
+};
+const deleteClientValidationRules = () => {
+  return [
+    check("id").exists().withMessage("id is Required"),
+    // check("creator")
+    //   .exists()
+    //   .isString()
+    //  .custom((userId) => {
+    //    return User.findById(userId).then((user) => {
+    //    if (!user) {
+    //      return Promise.reject("Creator Not Exisit");
+    //    }
+    //  });
+    //  }),
+  ];
+};
 const shipmentValidationRules = () => {
   return [
     check("gauge")
@@ -220,6 +252,8 @@ const validate = (req, res, next) => {
   next(error);
 };
 module.exports = {
+  deleteClientValidationRules,
+  editeClientValidationRules,
   userLoginValidationRules,
   validate,
   userSignUpValidationRules,

@@ -2,7 +2,7 @@ import React from "react";
 import Table from "../../components/common/Table";
 import { useSelector } from "react-redux";
 import { useTable } from "react-table";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Alert } from "react-bootstrap";
 import ShipmentCellActionButtons from "../../components/shipments/ShipmentCellActionButtons";
 import {
   netWeightPerKg,
@@ -132,7 +132,19 @@ function ShipmentsTable() {
   const shipmentsStatus = useSelector(selectStatus);
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
     table;
-
+  const content =
+    shipments.length === 0 ? (
+      <Alert variant='warning' show>
+        <p>!لا يوجد شحنات </p>
+      </Alert>
+    ) : (
+      <Table
+        getTableProps={getTableProps}
+        headerGroups={headerGroups}
+        getTableBodyProps={getTableBodyProps}
+        page={rows}
+        prepareRow={prepareRow}></Table>
+    );
   return (
     <div>
       {" "}
@@ -141,12 +153,7 @@ function ShipmentsTable() {
           <Spinner animation='border' variant='primary' />
         </div>
       ) : (
-        <Table
-          getTableProps={getTableProps}
-          headerGroups={headerGroups}
-          getTableBodyProps={getTableBodyProps}
-          page={rows}
-          prepareRow={prepareRow}></Table>
+        content
       )}
     </div>
   );

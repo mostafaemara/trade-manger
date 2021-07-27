@@ -2,6 +2,7 @@ const Client = require("../models/client");
 const Shipment = require("../models/shipment");
 const Payment = require("../models/payment");
 const HttpError = require("http-errors");
+const { contextsKey } = require("express-validator/src/base");
 exports.getClients = (req, res, next) => {
   Client.find()
     .populate("creator", "name")
@@ -143,3 +144,60 @@ function calculateShipmentNetPrice(shipment) {
   const price = shipment.pricePerKantar * kantarNetWeight;
   return price - shipment.expenses;
 }
+
+exports.editeClient = async (req, res, next) => {
+  const id = req.body.id;
+  const name = req.body.name;
+  const phoneNumber = req.body.phoneNumber;
+
+  try {
+    const client = await Client.findOneAndUpdate(
+      { _id: id },
+      {
+        name: name,
+        phoneNumber: phoneNumber,
+
+        creator: req.userId,
+      },
+      { new: true }
+    );
+    if (!client) {
+      const error = new HttpError(404, "Client not found!");
+      next(error);
+    }
+
+    res.status(201).json({
+      message: "client edited successfully",
+      client: client,
+    });
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
+    next(error);
+  }
+};
+exports.deleteClient = async (req, res, next) => {
+  const id = req.body.id;
+
+  try {
+    const client = await Client.findByIdAndRemove(id);
+    if (!client) {
+      const error = new HttpError(404, "Client not found!");
+      next(error);
+    }
+    const paymentResult = await Payment.deleteMany({
+      client: id,
+    });
+    const shipmentResult = await Shipment.deleteMany({
+      client: id,
+    });
+    console.log("Shipment Delete Result", shipmentResult);
+    console.log("Payment Delete Result", paymentResult);
+    res.status(201).json({
+      message: "client deleted successfully",
+      client: client,
+    });
+  } catch (e) {
+    const error = new HttpError(500, e.message || "Internal error!");
+    next(error);
+  }
+};

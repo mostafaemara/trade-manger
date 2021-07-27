@@ -28,4 +28,5 @@ module.exports = (req, res, next) => {
 
     next(error);
   }
+  return;
 };

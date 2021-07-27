@@ -4,7 +4,7 @@ module.exports = {
     return [
       {
         source: "/api",
-        destination: "https://trade-manger.vercel.app/api",
+        destination: "http://localhost:3000/api",
       },
     ];
   },

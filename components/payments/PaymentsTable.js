@@ -2,7 +2,7 @@ import React from "react";
 import Table from "../../components/common/Table";
 import { useSelector } from "react-redux";
 import { useTable } from "react-table";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Alert } from "react-bootstrap";
 import PaymentsCellActionButtons from "../../components/payments/PaymentsCellActionButtons";
 
 import { selectStatus, selectPayments } from "../../redux/store/payments-slice";
@@ -67,7 +67,19 @@ function PaymentsTable() {
   const paymentsStatus = useSelector(selectStatus);
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
     table;
-
+  const content =
+    payments.length === 0 ? (
+      <Alert variant='warning' show>
+        <p>!لا يوجد دفعات مالية </p>
+      </Alert>
+    ) : (
+      <Table
+        getTableProps={getTableProps}
+        headerGroups={headerGroups}
+        getTableBodyProps={getTableBodyProps}
+        page={rows}
+        prepareRow={prepareRow}></Table>
+    );
   return (
     <div>
       {" "}
@@ -76,12 +88,7 @@ function PaymentsTable() {
           <Spinner animation='border' variant='primary' />
         </div>
       ) : (
-        <Table
-          getTableProps={getTableProps}
-          headerGroups={headerGroups}
-          getTableBodyProps={getTableBodyProps}
-          page={rows}
-          prepareRow={prepareRow}></Table>
+        content
       )}
     </div>
   );

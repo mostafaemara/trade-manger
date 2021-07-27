@@ -6,7 +6,7 @@ const API_SHIPMENTS_PATH = "/shipments";
 const API_SHIPMENT_PATH = "/shipment";
 
 const API_CLIENTS_PATH = "/clients";
-
+const API_CLIENT_PATH = "/client";
 const API_PAYMENTS_PATH = "/payments";
 const API_PAYMENT_PATH = "/payment";
 
@@ -60,6 +60,70 @@ export const fetchClients = async (token) => {
     const response = await axios.get(API_BASE_URL + API_CLIENTS_PATH, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const postClient = async (client, token) => {
+  try {
+    const response = await axios.post(
+      API_BASE_URL + API_CLIENT_PATH,
+      {
+        name: client.name,
+        phoneNumber: client.phoneNumber,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateClient = async (client, token) => {
+  try {
+    const response = await axios.put(
+      API_BASE_URL + API_CLIENT_PATH,
+      {
+        id: client.id,
+        name: client.name,
+        phoneNumber: client.phoneNumber,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteClient = async (id, token) => {
+  try {
+    const response = await axios.delete(
+      API_BASE_URL + API_CLIENT_PATH,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          id: id,
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
