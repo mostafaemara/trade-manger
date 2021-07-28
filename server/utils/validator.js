@@ -185,6 +185,20 @@ const editeShipmentValidationRules = () => {
 const deleteShipmentValidationRules = () => {
   return [check("id").exists("Required")];
 };
+const statmentValidationRules = () => {
+  return [
+    check("id")
+      .exists("Required")
+      .isString()
+      .custom((id) => {
+        return Client.findById(id).then((client) => {
+          if (!client) {
+            return Promise.reject("Client Not Exisit!");
+          }
+        });
+      }),
+  ];
+};
 const paymentValidationRules = () => {
   return [
     check("date")
@@ -264,4 +278,5 @@ module.exports = {
   deleteShipmentValidationRules,
   editePaymentValidationRules,
   deletePaymentValidationRules,
+  statmentValidationRules,
 };

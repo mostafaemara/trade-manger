@@ -58,6 +58,11 @@ function NavigationBar(props) {
                 </Link>
               </Nav.Item>
               <Nav.Item>
+                <Link href='/statment' passHref>
+                  <Nav.Link>كشف حساب</Nav.Link>
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
                 <Link href='/clients' passHref>
                   <Nav.Link>العملاء</Nav.Link>
                 </Link>

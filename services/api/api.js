@@ -4,6 +4,7 @@ const API_BASE_URL = "/api";
 const API_LOGIN_PATH = "/login";
 const API_SHIPMENTS_PATH = "/shipments";
 const API_SHIPMENT_PATH = "/shipment";
+const API_STATMENT_PATH = "/statment";
 
 const API_CLIENTS_PATH = "/clients";
 const API_CLIENT_PATH = "/client";
@@ -313,6 +314,31 @@ export const deletePayment = async (id, token) => {
 
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchStatment = async ({
+  id,
+
+  token,
+}) => {
+  console.log("client id", id);
+  try {
+    const response = await axios.get(API_BASE_URL + API_STATMENT_PATH, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params: {
+        id: id,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log("client id", error);
     throw error;
   }
 };
