@@ -13,10 +13,10 @@ router.post(
   validate,
   authController.logIn
 );
-router.post(
-  "/signup",
-  userSignUpValidationRules(),
-  validate,
-  authController.signUp
-);
+//router.post(
+// "/signup",
+// userSignUpValidationRules(),
+//  validate,
+//  authController.signUp
+//);
 module.exports = router;
