@@ -31,7 +31,7 @@ export const fetchStatmentThunk = createAsyncThunk(
   async (props, { rejectWithValue }) => {
     try {
       const response = await fetchStatment(props);
-      console.log("statzzz", response);
+
       return response;
     } catch (error) {
       return rejectWithValue(error.request.response);

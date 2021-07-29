@@ -38,7 +38,7 @@ function ClientsPage() {
 
   return (
     <>
-      <title>Clients</title>
+      <title>العملاء</title>
       <ClientsModal></ClientsModal>
       <ClientsStatusAlert></ClientsStatusAlert>
       <ClientsDeleteModal></ClientsDeleteModal>

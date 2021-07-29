@@ -15,7 +15,7 @@ function StatmentFilterForm() {
   ));
   itms = [
     <option key={"0123456all"} value=''>
-      All
+      اختار
     </option>,
     ...itms,
   ];

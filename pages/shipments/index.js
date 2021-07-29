@@ -54,7 +54,7 @@ function ShipmentsPage() {
   console.log("Refresh", refresh);
   return (
     <>
-      <title>Shipments</title>
+      <title>الشحنات</title>
       <ShipmentModal></ShipmentModal>
       <ShipmentsStatusAlert></ShipmentsStatusAlert>
       <ShipmentsDeleteModal></ShipmentsDeleteModal>

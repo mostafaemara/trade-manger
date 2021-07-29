@@ -50,7 +50,7 @@ function ShipmentForm({ shipment }) {
     isPriced: true,
   };
   if (shipment) {
-    console.log("Shipmeeeeeeeeeeeent", shipment.date);
+    console.log("Shipmeeeeeeeeeeeent", shipment);
     initialValue = {
       client: shipment.client._id,
       date: formatDate(shipment.date),
@@ -267,7 +267,7 @@ function ShipmentForm({ shipment }) {
             <Form.Group as={Col}>
               <Form.Check
                 dir='rtl'
-                defaultChecked
+                defaultChecked={initialValue.isPriced}
                 value={values.isPriced}
                 name='isPriced'
                 label='مسعر؟'

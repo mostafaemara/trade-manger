@@ -1,21 +1,31 @@
 const Shipment = require("../models/shipment");
 const Payment = require("../models/payment");
+const Client = require("../models/client");
 const HttpError = require("http-errors");
 
 exports.getStatement = async (req, res, next) => {
   try {
-    console.log("asasfasfasfasfasf");
-    const id = req.body.id;
-
+    const id = req.query.id;
+    console.log("IDZ", id);
+    const client = await Client.findById(id);
+    if (!client) {
+      const error = new HttpError(404, "Client not found! ");
+      next(error);
+    }
     let statment = {};
     const shipments = await Shipment.find(
       { client: id },
       "bags gauge weight pricePerKantar expenses isPriced extraBags extraGauge"
     );
+    const notPricedShipments = await Shipment.find(
+      { client: id, isPriced: false },
+      "_id"
+    );
+    console.log("Not priced", notPricedShipments.length);
     const payments = await Payment.find({ client: id }, "cash");
     if (!payments && !shipments) {
       statement = {
-        client: id,
+        client: client,
         shipments: [],
         payments: [],
         debts: 0,
@@ -23,27 +33,27 @@ exports.getStatement = async (req, res, next) => {
         totalNetWeight: 0,
         totalKantarWeight: 0,
         totalKantarWeight: 0,
+        remaining: 0,
       };
     } else {
-      statment = calculateStatement(shipments, payments, id);
+      statment = calculateStatement(shipments, payments);
     }
 
     res.json({
-      statment: statment,
+      statment: { client, notPricedShipments, ...statment },
     });
   } catch (e) {
     const error = new HttpError(500, e.message || "Internal Error ");
     next(error);
   }
 };
-function calculateStatement(shipments, payments, id) {
+function calculateStatement(shipments, payments) {
   const totalShipmentsPrice = calculateShipmentsPrices(shipments);
   const totalCash = calculatePaymentsCash(payments);
   const totalNetWeight = calculateTotalNetWeight(shipments);
   const totalKantarWeight = calculateKantarWeight(totalNetWeight);
-
+  const remaining = totalShipmentsPrice - totalCash;
   return {
-    client: id,
     shipments: shipments,
     payments: payments,
     debts: totalShipmentsPrice,
@@ -51,6 +61,7 @@ function calculateStatement(shipments, payments, id) {
     totalNetWeight: totalNetWeight,
     totalKantarWeight,
     totalKantarWeight,
+    remaining: remaining,
   };
 }
 function calculatePaymentsCash(payments) {
@@ -63,6 +74,7 @@ function calculatePaymentsCash(payments) {
 
 function calculateTotalNetWeight(shipments) {
   let totalNetWeight = 0;
+
   for (let shipment of shipments) {
     if (shipment.isPriced) {
       const netWeight = calculateNetWeight(shipment);
@@ -84,6 +96,7 @@ function calculateKantarWeight(netWeight) {
 
 function calculateShipmentsPrices(shipments) {
   let totalShipmentsPrice = 0;
+
   for (let shipment of shipments) {
     if (shipment.isPriced) {
       totalShipmentsPrice =

@@ -25,8 +25,9 @@ function StatmentPage() {
   const isAuthnticated = useSelector(selectIsAuthnticated);
 
   useEffect(() => {
-    if (isAuthnticated) {
+    if (isAuthnticated && filter.client) {
       dispatch(checkAuth());
+
       dispatch(
         fetchStatmentThunk({
           id: filter.client,
@@ -39,7 +40,7 @@ function StatmentPage() {
 
   return (
     <>
-      <title>Statment</title>
+      <title>كشف حساب</title>
 
       <StatmentStatusAlert></StatmentStatusAlert>
 

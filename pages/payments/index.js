@@ -52,7 +52,7 @@ function PaymentsPage() {
   console.log("Refresh", refresh);
   return (
     <>
-      <title>Shipments</title>
+      <title>الدفعات المالية</title>
       <PaymentsModal></PaymentsModal>
       <PaymentsStatusAlert></PaymentsStatusAlert>
       <PaymentsDeleteModal></PaymentsDeleteModal>

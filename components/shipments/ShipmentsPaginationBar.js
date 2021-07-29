@@ -44,8 +44,8 @@ function ShipmentsPaginationBar() {
       pageRangeDisplayed={10}
       activeClassName='act'
       pageLinkClassName='link'
-      nextLinkClassName='link'
-      previousLinkClassName='link'></ReactPaginate>
+      nextLinkClassName='nextprev'
+      previousLinkClassName='nextprev'></ReactPaginate>
   );
 }
 
