@@ -37,57 +37,59 @@ function LoginForm(props) {
   }
 
   return (
-    <div className='d-flex justify-content-center p-5 '>
-      <div className='card'>
-        <div className='card-header text-center'>
-          {" "}
-          <h3>Login</h3>
-        </div>
-        <div className='card-body '>
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            onSubmit={submitHandler}
-            validationSchema={loginSChema}>
-            {({ isSubmiting }) => (
-              <Form>
-                <div className='form-group p-3'>
-                  <label>Email</label>
-                  <Field
-                    className='form-control'
-                    placeholder='name@example.com'
-                    type='email'
-                    name='email'></Field>
-                  <ErrorMessage
-                    className='form-text text-danger'
-                    name='email'
-                    component='div'></ErrorMessage>
-                </div>
-                <div className='form-group p-3'>
-                  <label>Password</label>
-                  <Field
-                    className='form-control'
-                    type='password'
-                    name='password'></Field>
-                  <ErrorMessage
-                    className='form-text text-danger'
-                    name='password'
-                    component='div'></ErrorMessage>
-                </div>
-                <button
-                  className='btn btn-primary m-3'
-                  type='submit'
-                  disabled={isSubmiting}>
-                  Submit
-                </button>
-                <button type='button' className='btn btn-link'>
-                  Dont have Acount? Signup
-                </button>
-                {authStatus === "failed" && (
-                  <Alert variant='danger'>{error.message}</Alert>
-                )}
-              </Form>
-            )}
-          </Formik>
+    <div className='bg'>
+      <div className='d-flex justify-content-center p-5'>
+        <div className='card '>
+          <div className='card-header text-center'>
+            {" "}
+            <h3>دخول</h3>
+          </div>
+          <div className='card-body '>
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              onSubmit={submitHandler}
+              validationSchema={loginSChema}>
+              {({ isSubmiting }) => (
+                <Form>
+                  <div className='form-group p-3'>
+                    <label>البريد الالكتروني</label>
+                    <Field
+                      className='form-control'
+                      placeholder='name@example.com'
+                      type='email'
+                      name='email'></Field>
+                    <ErrorMessage
+                      className='form-text text-danger'
+                      name='email'
+                      component='div'></ErrorMessage>
+                  </div>
+                  <div className='form-group p-3'>
+                    <label>كلمة المرور</label>
+                    <Field
+                      className='form-control'
+                      type='password'
+                      name='password'></Field>
+                    <ErrorMessage
+                      className='form-text text-danger'
+                      name='password'
+                      component='div'></ErrorMessage>
+                  </div>
+                  <button
+                    className='btn btn-primary m-3'
+                    type='submit'
+                    disabled={isSubmiting}>
+                    دخول
+                  </button>
+                  <button type='button' className='btn btn-link'>
+                    ليس لديك حساب؟ تسجيل دخول
+                  </button>
+                  {authStatus === "failed" && (
+                    <Alert variant='danger'>{error.message}</Alert>
+                  )}
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
     </div>

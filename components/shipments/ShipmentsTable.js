@@ -25,14 +25,14 @@ function ShipmentsTable() {
           shipment.gauge,
           shipment.extraBags,
           shipment.extraGauge
-        ).toFixed(2);
+        ).toFixed(3);
         const netweightPerKantar =
-          netWeightPerKantar(netweightPerKg).toFixed(2);
+          netWeightPerKantar(netweightPerKg).toFixed(3);
         const netPrice = calculateNetPrice(
           shipment.pricePerKantar,
           netweightPerKantar,
           shipment.expenses
-        ).toFixed(2);
+        ).toFixed(3);
 
         return {
           client: shipment.client.name,

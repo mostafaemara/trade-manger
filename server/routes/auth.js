@@ -16,7 +16,7 @@ router.post(
 //router.post(
 // "/signup",
 // userSignUpValidationRules(),
-//  validate,
-//  authController.signUp
+// validate,
+// authController.signUp
 //);
 module.exports = router;

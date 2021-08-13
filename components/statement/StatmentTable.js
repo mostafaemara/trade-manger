@@ -9,6 +9,7 @@ function StatmentTable() {
   const statment = useSelector(selectStatment);
   console.log("statmentssssss", statment);
   const status = useSelector(selectStatus);
+
   const content =
     status === "succeeded" ? (
       <Table striped bordered hover>
@@ -27,11 +28,21 @@ function StatmentTable() {
         </thead>
         <tbody>
           <tr>
-            <td>{statment.totalKantarWeight.toFixed(3)}</td>
-            <td>{statment.totalNetWeight.toFixed(3)}</td>
-            <td>{statment.shipments.length}</td>
-            <td>{statment.payments.length}</td>
-            <td>{statment.notPricedShipments.length}</td>
+            <td>
+              {parseFloat(statment.totalKantarWeight.toFixed(3)).toLocaleString(
+                "ar-EG"
+              )}
+            </td>
+            <td>
+              {parseFloat(statment.totalNetWeight.toFixed(3)).toLocaleString(
+                "ar-EG"
+              )}
+            </td>
+            <td>{statment.shipments.length.toLocaleString("ar-EG")}</td>
+            <td>{statment.payments.length.toLocaleString("ar-EG")}</td>
+            <td>
+              {statment.notPricedShipments.length.toLocaleString("ar-EG")}
+            </td>
           </tr>
         </tbody>
         <tfoot>
@@ -41,9 +52,17 @@ function StatmentTable() {
             <th colSpan='2'> المبغ المتبقي (ج.م)</th>
           </tr>
           <tr>
-            <td colSpan='1'>{statment.debts.toFixed(3)}</td>
-            <td colSpan='2'>{statment.dues.toFixed(3)}</td>
-            <td colSpan='2'>{statment.remaining.toFixed(3)}</td>
+            <td colSpan='1'>
+              {parseFloat(statment.debts.toFixed(3)).toLocaleString("ar-EG")}
+            </td>
+            <td colSpan='2'>
+              {parseFloat(statment.dues.toFixed(3)).toLocaleString("ar-EG")}
+            </td>
+            <td dir='ltr' colSpan='2'>
+              {parseFloat(statment.remaining.toFixed(3)).toLocaleString(
+                "ar-EG"
+              )}
+            </td>
           </tr>
         </tfoot>
       </Table>

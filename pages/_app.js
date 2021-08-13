@@ -9,12 +9,14 @@ import AppWrapper from "../components/common/AppWrapper";
 function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <AppWrapper>
-        <Layout>
-          <NavigationBar></NavigationBar>
-          <Component {...pageProps} />
-        </Layout>
-      </AppWrapper>
+      <body>
+        <AppWrapper>
+          <Layout>
+            <NavigationBar></NavigationBar>
+            <Component {...pageProps} />
+          </Layout>
+        </AppWrapper>
+      </body>
     </Provider>
   );
 }

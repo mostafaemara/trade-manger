@@ -45,7 +45,7 @@ function ShipmentForm({ shipment }) {
     expenses: "",
     gauge: 2,
     bags: "",
-    extraGauge: 2,
+    extraGauge: 1,
     extraBags: "",
     isPriced: true,
   };
